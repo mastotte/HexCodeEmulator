@@ -15,7 +15,7 @@ jobs:
           cmake --version
       - name: Build hello_world example
         run: |
-          cd examples
+          cd files
           mkdir build
           cd build
           cmake ..
