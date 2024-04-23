@@ -1,4 +1,7 @@
 SOURCES := hello.cpp
+CXX      := -c++
+main hello.cpp:
+	g++ $^ -o $@
 
 format:
 	clang-format ${SOURCES} -i --style=Google
