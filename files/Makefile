@@ -1,5 +1,5 @@
 SOURCES := hello.cpp
-main hello.cpp:
+main: hello.cpp
 	g++ $^ -o $@
 
 format:
