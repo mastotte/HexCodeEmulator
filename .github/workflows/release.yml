@@ -1,3 +1,4 @@
+#BAD
 name: Release
 on:
   push:
