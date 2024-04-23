@@ -9,8 +9,8 @@ Group members:
 - Milan Moslehi <mmoslehi@ucsc.edu>
 - Max Totten <mastotte@ucsc.edu>
 
-We will be using the following site for reference.
-https://github.com/ucsc-cse111/github_setup
+[This website will be used for reference.](https://github.com/ucsc-cse111/github_setup
+)
 
-Instructions are given at the following link.
-https://canvas.ucsc.edu/courses/72707/files/8960183/download?download_frd=1
+[Instructions are given here.](https://canvas.ucsc.edu/courses/72707/files/8960183/download?download_frd=1
+)
