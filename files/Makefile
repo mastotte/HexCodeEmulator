@@ -1,5 +1,4 @@
 SOURCES := hello.cpp
-CXX      := -c++
 main hello.cpp:
 	g++ $^ -o $@
 
