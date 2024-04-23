@@ -15,4 +15,5 @@ jobs:
           clang-format --version
       - name: Verify format
         run: |
+          cd files
           make verify-format
