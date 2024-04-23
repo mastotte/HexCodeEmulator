@@ -16,8 +16,5 @@ jobs:
       - name: Build hello_world example
         run: |
           cd files
-          mkdir build
-          cd build
-          cmake ..
           make
-          ./hello_world
+          ./main
