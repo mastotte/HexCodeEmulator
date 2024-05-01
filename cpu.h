@@ -23,4 +23,20 @@ class CPU {
         void jumpRegister(int reg_a){
             programCounter = registers[reg_a];
         }
+
+        void shiftLeftLogical (int reg_b, int reg_c, int shift_value){
+            registers[reg_c] = registers[reg_b] << shift_value;
+        }
+
+
+        void shiftRightLogical (int reg_b, int reg_c, int shift_value){
+            registers[reg_c] =  registers[reg_b] >> shift_value; 
+        }
+
+        void setLessThan (int reg_b, int reg_c, int shift_value){
+            registers[reg_c] =  (R[reg_a] < R[reg_b]);
+        }
+
+
+
 }
