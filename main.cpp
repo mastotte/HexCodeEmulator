@@ -4,41 +4,25 @@
 #include <string>
 #include <vector>
 #include "FileAnalyzerFile.h"
+#include "cpu.h"
 
-int main(int argc, char* argv[]){
+int main(char* argv[]){
+    uint16_t programCounter = 0x0000;
+
+
+
+    programCounter = 0xfffc;
     char* filename = argv[1];
     std::cout << argv[1] << std::endl;
     FileAnalyzerFile file = FileAnalyzerFile(filename);
 
+    uint32_t setup_address = file.ReadBigEndianInt32(0x01e0);
+    std::cout << setup_address << std::endl;
+    setup_address -= 32768; // subtracting 8000 hex in order to account for slug file starting at 0x8000
 
-    // std::ifstream file(filename, std::ios::binary | std::ios::ate);
+    // Use a while loop to iterate through the instructions 
+    std::cout << file.ReadBigEndianInt32(setup_address) << std::endl;
 
-    // // Check if file is opened successfully
-    // if (!file.is_open()) {
-    // std::cerr << "Error opening file: " << filename << std::endl;
-    //     return 0;
-    // }
-
-    // // Get the size of the file
-    // int file_size_ = file.tellg();
-
-    // // Reset file pointer to the beginning
-    // file.seekg(0, std::ios::beg);
-
-    // // Allocate memory to store the contents of the file
-    // std::unique_ptr<char[]> contents_ = std::make_unique<char[]>(file_size_);
-
-    // // Read the contents of the file into the allocated memory
-    // file.read(contents_.get(), file_size_);
-
-    // // Close the file
-    // file.close();
-
-    std::cout <<file.ReadBigEndianInt32(0x01e0) << std::endl;
     
-    // std::cout << (int) contents_[480] << std::endl;
-    // std::cout << (int) contents_[481] << std::endl;
-    // std::cout << int((uint8_t) (contents_[482])) << std::endl;
-    // std::cout << (int) contents_[483] << std::endl;
-    // return 0;
+
 }

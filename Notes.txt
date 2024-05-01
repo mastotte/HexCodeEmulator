@@ -1,0 +1,3 @@
+Understand Program counter and how changing its value moves the emulator forward
+Setting up a class containing the all the CPU instructions as functions so that they can be stored in an array and called as the .slug file is read
+Adding program counter and the registers to the class 
