@@ -44,8 +44,6 @@ class CPU {
                 programCounter += 4+4*immediate;
             }
         }
-
-        //--------------------- 2.2.4-2.2.7 (Max) ---------------------
         
 
         //--------------------- 2.1.9-2.2.3 (Josh) ---------------------
@@ -82,8 +80,8 @@ class CPU {
         void shiftRightLogical (int reg_b, int reg_c, int shift_value){
             registers[reg_c] =  registers[reg_b] >> shift_value; 
         }
-        void setLessThan (int reg_a, int reg_b, int reg_c, int shift_value){ //added param reg_a
-            registers[reg_c] =  (registers[reg_a] < registers[reg_b]); //changed R to registers
+        void setLessThan (int reg_a, int reg_b, int reg_c, int shift_value){ 
+            registers[reg_c] =  (registers[reg_a] < registers[reg_b]);
         }
 
 };
