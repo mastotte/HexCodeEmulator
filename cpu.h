@@ -8,6 +8,7 @@ class CPU {
     private:
         uint16_t programCounter;
         uint16_t *registers;
+        uint16_t *memory;
     public:
         //--------------------- 2.1.1-2.14 (Milan) ---------------------
         void branchOnEqual(int reg_a, int reg_b, int immediate){
@@ -18,16 +19,17 @@ class CPU {
 
         //--------------------- 2.1.5-2.1.8 (Daniel) ---------------------
         void storeWord(int reg_a, int reg_b, int immediate){
-
+            memory[registers[reg_a] + immediate] = registers[reg_b];
         }
         void storeByte(int reg_a, int reg_b, int immediate){
-
+            
         }
         void orImmediate(int reg_a, int reg_b, int immediate){
-
+            (registers[reg_b] = registers[reg_a] | immediate);
         }
         void branchOnNotEqual(int reg_a, int reg_b, int immediate){
-            
+            if (registers[reg_a] != registers[reg_b]){
+                programCounter += 4+4*immediate;
         }
 
         //--------------------- 2.2.4-2.2.7 (Max) ---------------------
