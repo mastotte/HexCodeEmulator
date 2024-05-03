@@ -17,6 +17,18 @@ class CPU {
             }
         }
 
+        void loadWord(int reg_a, int reg_b, int immediate){
+            registers[reg_b] = memory[registers[reg_a] + immediate];
+        }
+
+        void loadByteUnsigned(int reg_a, int reg_b, int immediate){
+            registers[reg_b] = memory[registers[reg_a] + immediate]; // what does (7:0) mean?
+        }
+
+        void jump(int immediate){
+            programCounter = 4 * immediate; 
+        }
+
         //--------------------- 2.1.5-2.1.8 (Daniel) ---------------------
         void storeWord(int reg_a, int reg_b, int immediate){
             memory[registers[reg_a] + immediate] = registers[reg_b];
@@ -30,6 +42,7 @@ class CPU {
         void branchOnNotEqual(int reg_a, int reg_b, int immediate){
             if (registers[reg_a] != registers[reg_b]){
                 programCounter += 4+4*immediate;
+            }
         }
 
         //--------------------- 2.2.4-2.2.7 (Max) ---------------------
