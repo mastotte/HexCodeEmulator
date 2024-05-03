@@ -17,6 +17,20 @@ class CPU {
         }
 
         //--------------------- 2.1.5-2.1.8 (Daniel) ---------------------
+        void storeWord(int reg_a, int reg_b, int immediate){
+
+        }
+        void storeByte(int reg_a, int reg_b, int immediate){
+
+        }
+        void orImmediate(int reg_a, int reg_b, int immediate){
+
+        }
+        void branchOnNotEqual(int reg_a, int reg_b, int immediate){
+            
+        }
+
+        //--------------------- 2.2.4-2.2.7 (Max) ---------------------
         
 
         //--------------------- 2.1.9-2.2.3 (Josh) ---------------------
@@ -40,7 +54,7 @@ class CPU {
         void shiftRightArithmetic(int reg_b, int reg_c, int shift_value){
             registers[reg_c] = (signed) registers[reg_b] >> shift_value;
         }
-        void and_Op(int reg_a, int reg_b, int reg_c){
+        void bitwise_and(int reg_a, int reg_b, int reg_c){      //Can't use 'and' as the function name gives an error
             registers[reg_c] = registers[reg_a] & registers[reg_b];
         }
         void jumpRegister(int reg_a){
@@ -50,17 +64,12 @@ class CPU {
         void shiftLeftLogical (int reg_b, int reg_c, int shift_value){
             registers[reg_c] = registers[reg_b] << shift_value;
         }
-
-
         void shiftRightLogical (int reg_b, int reg_c, int shift_value){
             registers[reg_c] =  registers[reg_b] >> shift_value; 
         }
-
         void setLessThan (int reg_a, int reg_b, int reg_c, int shift_value){ //added param reg_a
             registers[reg_c] =  (registers[reg_a] < registers[reg_b]); //changed R to registers
         }
-
-
 
 };
 #endif
