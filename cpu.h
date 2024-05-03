@@ -1,3 +1,6 @@
+#ifndef CPU_H //added header guards
+#define CPU_H 
+
 #include <cstdint>
 #include <iostream>
 
@@ -17,15 +20,27 @@ class CPU {
         
 
         //--------------------- 2.1.9-2.2.3 (Josh) ---------------------
-
-        //--------------------- 2.2.4-2.2.7 (Max) ---------------------
+        void jumpAndLink(int immediate){
+        	registers[31] = programCounter + 4;
+        	programCounter = 4*immediate;
+        }
+        void subtract(int reg_a, int reg_b, int reg_c){
+        	registers[reg_c] = registers[reg_a] = registers[reg_b];
+        }
+        void or_Op(int reg_a, int reg_b, int reg_c){
+        	registers[reg_c] = registers[reg_a] or registers[reg_b];
+        }
+        void nor(int reg_a, int reg_b, int reg_c){
+        	registers[reg_c] = not (registers[reg_a] or registers[reg_b]);
+        }
+        //--------------------- 2.2.4-2.2.7 (Max) --------------------
         void add(int reg_a, int reg_b, int reg_c){
             registers[reg_c] = registers[reg_a] + registers[reg_b];
         }
         void shiftRightArithmetic(int reg_b, int reg_c, int shift_value){
             registers[reg_c] = (signed) registers[reg_b] >> shift_value;
         }
-        void and(int reg_a, int reg_b, int reg_c){
+        void and_Op(int reg_a, int reg_b, int reg_c){
             registers[reg_c] = registers[reg_a] & registers[reg_b];
         }
         void jumpRegister(int reg_a){
@@ -41,10 +56,11 @@ class CPU {
             registers[reg_c] =  registers[reg_b] >> shift_value; 
         }
 
-        void setLessThan (int reg_b, int reg_c, int shift_value){
-            registers[reg_c] =  (R[reg_a] < R[reg_b]);
+        void setLessThan (int reg_a, int reg_b, int reg_c, int shift_value){ //added param reg_a
+            registers[reg_c] =  (registers[reg_a] < registers[reg_b]); //changed R to registers
         }
 
 
 
-}
+};
+#endif
