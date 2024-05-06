@@ -7,16 +7,16 @@
 #include "cpu.h"
 
 enum Opcode {
-    branchOnEqual = 0;
-    loadWord = 2;
-    loadByteUnsigned = 16;
-    jump = 36;
-    storeWord = 48;
-    storeByte = 50;
-    orImmediate = 53;
-    branchOnNotEqual = 59;
-    jumpAndLink = 61;
-    R_TYPE = 62; // note that all R-type instructions have same opcode, but diff function #s 
+    branchOnEqual = 0,
+    loadWord = 2,
+    loadByteUnsigned = 16,
+    jump = 36,
+    storeWord = 48,
+    storeByte = 50,
+    orImmediate = 53,
+    branchOnNotEqual = 59,
+    jumpAndLink = 61,
+    R_TYPE = 62 // note that all R-type instructions have same opcode, but diff function #s 
 /*
     subtract = 0;
     or_Op = 4;
@@ -29,20 +29,20 @@ enum Opcode {
     shiftRightLogical = 35;
     setLessThan = 36;
 */
-}
+};
 
 enum function_codes { //R-type instructions function codes
-    subtract = 0;
-    or_Op = 4;
-    nor = 7
-    add = 9;
-    shiftRightArithmetic = 11;
-    bitwise_and = 24;
-    jumpRegister = 28;
-    shiftLeftLogical = 32;
-    shiftRightLogical = 35;
-    setLessThan = 36;
-}
+    subtract = 0,
+    or_Op = 4,
+    nor = 7,
+    add = 9,
+    shiftRightArithmetic = 11,
+    bitwise_and = 24,
+    jumpRegister = 28,
+    shiftLeftLogical = 32,
+    shiftRightLogical = 35,
+    setLessThan = 36
+};
 int main(char* argv[]){
     uint16_t programCounter = 0x0000;
 
