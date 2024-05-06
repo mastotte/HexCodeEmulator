@@ -17,6 +17,21 @@ enum Opcode {
     branchOnNotEqual = 59;
     jumpAndLink = 61;
     R_TYPE = 62; // note that all R-type instructions have same opcode, but diff function #s 
+/*
+    subtract = 0;
+    or_Op = 4;
+    nor = 7
+    add = 9;
+    shiftRightArithmetic = 11;
+    bitwise_and = 24;
+    jumpRegister = 28;
+    shiftLeftLogical = 32;
+    shiftRightLogical = 35;
+    setLessThan = 36;
+*/
+}
+
+enum function_codes { //R-type instructions function codes
     subtract = 0;
     or_Op = 4;
     nor = 7
