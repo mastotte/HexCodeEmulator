@@ -60,20 +60,13 @@ int main(char* argv[]){
     std::cout << file.ReadBigEndianInt32(setup_address) << std::endl;
 
     /*
-    
-    //actual code draft (programmingCounter starts at 0xfffc).
-    
-    while(validAddress(programCounter)){
-        if (programCounter != 0xfffc){      //only iterate reading next 4 bytes when programCounter is not begining with setup or loop (0xfffc)
-            programCounter = next4Bytes();
-        }
-        
-        doInstruction(programCounter);
 
-        if(programCounter == 0xfffc){
-            programCounter = 0x0000         //return ProgramCounter to 0x0000 after running setup() or loop()
-        }
-        
+    //jumpInstruction to setup here <----
+    
+    
+    //actual code draft
+    while(validAddress(programCounter)){
+        doInstruction(programCounter);
     }
     */
 
