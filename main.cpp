@@ -61,7 +61,7 @@ int main(char* argv[]){
     std::cout << file.ReadBigEndianInt32(setup_address) << std::endl;
 
     /*
-    next4Bytes = 0xfffc         //a way to first set PC to 0xfffc
+    PC = 0xfffc         //a way to first set PC to 0xfffc
     while(not at end of read-in memory){ 
         if (PC != 0xfffc){      //only iterate reading next 4 bytes when PC is not begining with setup or loop (0xfffc)
             PC = next4Bytes
