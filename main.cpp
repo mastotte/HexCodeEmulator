@@ -84,7 +84,7 @@ int main(char* argv[]){
 
     //helper function to check if address is valid
     bool validAddress(uint16_t addr){
-        if(0x8000 <= addr < MAX_ADDRESS){
+        if(0x8000 <= addr <= MAX_ADDRESS){
             return 1;
         }
         return 0;
