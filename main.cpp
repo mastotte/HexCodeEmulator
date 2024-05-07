@@ -79,6 +79,22 @@ int main(char* argv[]){
     while(validAddress(programCounter)){
         doInstruction(programCounter);
     }
+    
+
+    //helper function to check if address is valid
+    bool validAddress(uint16_t addr){
+        if(0x8000 <= addr < MAX_ADDRESS){
+            return 1;
+        }
+        return 0;
+    }
+
+    //function to execute instruction based on current programCounter.
+    void doInstruction(uint16_t* programCounter){
+        //add code to compare programCounter reference to our memory array.
+        //update programCounter reference with new address.
+    }
+    
     */
 
     
