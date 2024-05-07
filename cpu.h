@@ -7,7 +7,7 @@
 class CPU {
     private:
         uint16_t programCounter;
-        uint16_t *registers;
+        uint16_t registers[32];
         uint16_t *memory;
     public:
         //--------------------- 2.1.1-2.14 (Milan) ---------------------
