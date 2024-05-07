@@ -60,23 +60,20 @@ int main(char* argv[]){
     std::cout << file.ReadBigEndianInt32(setup_address) << std::endl;
 
     /*
-    PC = 0xfffc         //a way to first set PC to 0xfffc
-    while(not at end of read-in memory){ 
-        if (PC != 0xfffc){      //only iterate reading next 4 bytes when PC is not begining with setup or loop (0xfffc)
-            PC = next4Bytes
+    
+    //actual code draft (programmingCounter starts at 0xfffc).
+    
+    while(validAddress(programCounter)){
+        if (programCounter != 0xfffc){      //only iterate reading next 4 bytes when programCounter is not begining with setup or loop (0xfffc)
+            programCounter = next4Bytes();
         }
-        if(PC <= 0x8000){         //PC must be greater than 0x8000
-            break;
-        }
-        switch(PC):
-            0x1: Function1
-            0x2: Function2
-            ...
-            0xfffc: setup() or loop()
+        
+        doInstruction(programCounter);
 
-        if(0xfffc){
-            PC = 0x0         //return PC to 0x0 after running setup() or loop()
+        if(programCounter == 0xfffc){
+            programCounter = 0x0000         //return ProgramCounter to 0x0000 after running setup() or loop()
         }
+        
     }
     */
 
