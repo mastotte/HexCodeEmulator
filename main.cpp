@@ -60,6 +60,27 @@ int main(char* argv[]){
     // Use a while loop to iterate through the instructions 
     std::cout << file.ReadBigEndianInt32(setup_address) << std::endl;
 
+    /*
+    next4Bytes = 0xfffc         //a way to first set PC to 0xfffc
+    while(not at end of file){ 
+        if (PC != 0xfffc){      //only iterate reading next 4 bytes when PC is not begining with setup or loop (0xfffc)
+            PC = next4Bytes
+        }
+        if(PC <= 0x8000){         //PC must be greater than 0x8000
+            break;
+        }
+        switch(PC):
+            0x1: Function1
+            0x2: Function2
+            ...
+            0xfffc: setup() or loop()
+
+        if(0xfffc){
+            PC = 0x0         //return PC to 0x0 after running setup() or loop()
+        }
+    }
+    */
+
     
 
 }
