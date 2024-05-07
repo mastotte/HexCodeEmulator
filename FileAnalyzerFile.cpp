@@ -25,7 +25,10 @@ FileAnalyzerFile::FileAnalyzerFile(
 
   // Allocate memory to store the contents of the file
   contents_ = std::make_unique<char[]>(file_size_);
+        
+  // stores value (displays differently based on computer), 1 byte in each index) actually reading in 4 at a time (the actual instruction)
 
+    
   // Read the contents of the file into the allocated memory
   file.read(contents_.get(), file_size_);
 
