@@ -47,7 +47,6 @@ int main(char* argv[]){
     uint16_t programCounter = 0x0000;
 
 
-
     programCounter = 0xfffc;
     char* filename = argv[1];
     std::cout << argv[1] << std::endl;
