@@ -5,11 +5,13 @@
 
 class CPU {
 private:
+    
+
+public:
     uint16_t programCounter;
     uint16_t registers[32];
     uint16_t *memory;
-
-public:
+    uint16_t reg_a;
     void branchOnEqual(int reg_a, int reg_b, int immediate);
     void loadWord(int reg_a, int reg_b, int immediate);
     void loadByteUnsigned(int reg_a, int reg_b, int immediate);

@@ -3,6 +3,9 @@
 #include <memory>
 #include <string>
 #include <vector>
+#include <unordered_map>
+#include <any>
+
 #include "FileAnalyzerFile.h"
 #include "cpu.h"
 
@@ -17,18 +20,6 @@ enum Opcode {
     branchOnNotEqual = 59,
     jumpAndLink = 61,
     R_TYPE = 62 // note that all R-type instructions have same opcode, but diff function #s 
-/*
-    subtract = 0;
-    or_Op = 4;
-    nor = 7
-    add = 9;
-    shiftRightArithmetic = 11;
-    bitwise_and = 24;
-    jumpRegister = 28;
-    shiftLeftLogical = 32;
-    shiftRightLogical = 35;
-    setLessThan = 36;
-*/
 };
 
 enum function_codes { //R-type instructions function codes
@@ -44,6 +35,26 @@ enum function_codes { //R-type instructions function codes
     setLessThan = 36
 };
 int main(char* argv[]){
+
+    CPU cpu;
+    std::unordered_map<int, std::any> optable;
+    optable[branchOnEqual] = &CPU::branchOnEqual;
+    optable[loadWord] = &CPU::loadWord;
+    optable[loadByteUnsigned] = &CPU::loadByteUnsigned;
+    optable[jump] = &CPU::jump;
+    optable[storeWord] = &CPU::storeWord;
+    optable[storeByte] = &CPU::storeByte;
+    optable[orImmediate] = &CPU::orImmediate;
+    optable[branchOnNotEqual] = &CPU::branchOnNotEqual;
+    optable[jumpAndLink] = &CPU::jumpAndLink;
+
+
+    // get opcode
+    // if opcode == 62
+    //  access next value to get function
+    // else
+    //  optable[opcode]
+
     uint16_t programCounter = 0x0000;
 
 
