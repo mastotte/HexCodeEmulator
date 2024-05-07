@@ -65,6 +65,7 @@ int main(char* argv[]){
 
     uint32_t setup_address = file.ReadBigEndianInt32(0x01e0);
     std::cout << setup_address << std::endl;
+    //the following math is no longer needed, since we will be using an array of the entire memory. <---
     setup_address -= 32768; // subtracting 8000 hex in order to account for slug file starting at 0x8000
 
     // Use a while loop to iterate through the instructions 
@@ -72,7 +73,7 @@ int main(char* argv[]){
 
     /*
 
-    //jumpInstruction to setup here <----
+    //jump to setup here <----
     
     
     //actual code draft
