@@ -36,7 +36,7 @@ enum function_codes { //R-type instructions function codes
 };
 int main(char* argv[]){
 
-    CPU cpu;
+    
     // r type map
     std::unordered_map<int, std::any> ROptable;
     ROptable[subtract] = &CPU::subtract;
@@ -68,10 +68,17 @@ int main(char* argv[]){
     // else
     //  optable[opcode]
 
-    uint16_t programCounter = 0x0000;
+    CPU cpu;
 
 
-    programCounter = 0xfffc;
+
+    cpu.programCounter = 0x0000;
+
+
+
+
+    // setup
+    cpu.programCounter = 0xfffc;
     char* filename = argv[1];
     std::cout << argv[1] << std::endl;
     FileAnalyzerFile file = FileAnalyzerFile(filename);
@@ -79,7 +86,7 @@ int main(char* argv[]){
     uint32_t setup_address = file.ReadBigEndianInt32(0x01e0);
     std::cout << setup_address << std::endl;
     //the following math is no longer needed, since we will be using an array of the entire memory. <---
-    setup_address -= 32768; // subtracting 8000 hex in order to account for slug file starting at 0x8000
+    setup_address -= 0x8000; // subtracting 8000 hex in order to account for slug file starting at 0x8000
 
     // Use a while loop to iterate through the instructions 
     std::cout << file.ReadBigEndianInt32(setup_address) << std::endl;
