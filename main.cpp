@@ -9,6 +9,14 @@
 #include "FileAnalyzerFile.h"
 #include "cpu.h"
 
+
+bool validAddress(uint16_t addr){
+    if (0x8000 <= addr <= 0x16000) {
+        return 1;
+    }
+    return 0;
+}
+
 enum Opcode {
     branchOnEqual = 0,
     loadWord = 2,
@@ -35,95 +43,85 @@ enum function_codes { //R-type instructions function codes
     setLessThan = 36
 };
 
-    void doInstruction(CPU cpu, uint16_t* programCounter){
-        //store instructions in register[12]
-        cpu.loadWord(0, 12, file.ReadBigEndianInt32(programCounter));
-        //store opcodes in register[11]
-        cpu.shiftRightLogical(11, 12, 26);
-        // store reg_a in 13
-        cpu.shiftLeftLogical(13, 12, 6);   //deletes <opcode>
-        cpu.shiftRightLogical(13, 13, 6);  //resets our alignment
-        cpu.shiftRightLogical(13, 13, 21); //deletes rhs
-        // store reg_b in 14
-        cpu.shiftLeftLogical(14, 12, 11);  //deletes <opcode> and <reg_a>
-        cpu.shiftRightLogical(14, 14, 11); //resets our alignment
-        cpu.shiftRightLogical(14, 14, 16); //deletes rhs
-        
-        if (cpu.registers[11] == R_TYPE){
-            // store function (r-type) in 16
-            cpu.shiftLeftLogical(16, 12, 26);
-            // store reg_c in 15
-            cpu.shiftLeftLogical(15, 12, 16);
-            cpu.shiftRightLogical(15, 15, 11);
-            ROptable[cpu.registers[16]](13, 14, 15);
-        }
-        else {
-            // store immediate in 17
-            cpu.shiftLeftLogical(17, 12, 16);
-            IOptable[cpu.registers[11]](13, 14, 17);
-        }
-    }
-     
+int main(int argc, char* argv[]){
+
+    // std::unordered_map<int, std::any> ROptable;
+    // ROptable[subtract] = &CPU::subtract;
+    // ROptable[or_Op] = &CPU::or_Op;
+    // ROptable[nor] = &CPU::nor;
+    // ROptable[add] = &CPU::add;
+    // ROptable[shiftRightArithmetic] = &CPU::shiftRightArithmetic;
+    // ROptable[bitwise_and] = &CPU::bitwise_and;
+    // ROptable[jumpRegister] = &CPU::jumpRegister;
+    // ROptable[shiftLeftLogical] = &CPU::shiftLeftLogical;
+    // ROptable[shiftRightLogical] = &CPU::shiftRightLogical;
+    // ROptable[setLessThan] = &CPU::setLessThan;
+
+    // // i type map
+    // std::unordered_map<int, std::any> IOptable;
+    // IOptable[branchOnEqual] = &CPU::branchOnEqual;
+    // IOptable[loadWord] = &CPU::loadWord;
+    // IOptable[loadByteUnsigned] = &CPU::loadByteUnsigned;
+    // IOptable[jump] = &CPU::jump;
+    // IOptable[storeWord] = &CPU::storeWord;
+    // IOptable[storeByte] = &CPU::storeByte;
+    // IOptable[orImmediate] = &CPU::orImmediate;
+    // IOptable[branchOnNotEqual] = &CPU::branchOnNotEqual;
+    // IOptable[jumpAndLink] = &CPU::jumpAndLink;
 
 
-
-int main(char* argv[]){
-    // r type map
-    std::unordered_map<int, std::any> ROptable;
-    ROptable[subtract] = &CPU::subtract;
-    ROptable[or_Op] = &CPU::or_Op;
-    ROptable[nor] = &CPU::nor;
-    ROptable[add] = &CPU::add;
-    ROptable[shiftRightArithmetic] = &CPU::shiftRightArithmetic;
-    ROptable[bitwise_and] = &CPU::bitwise_and;
-    ROptable[jumpRegister] = &CPU::jumpRegister;
-    ROptable[shiftLeftLogical] = &CPU::shiftLeftLogical;
-    ROptable[shiftRightLogical] = &CPU::shiftRightLogical;
-    ROptable[setLessThan] = &CPU::setLessThan;
-
-    // i type map
-    std::unordered_map<int, std::any> IOptable;
-    IOptable[branchOnEqual] = &CPU::branchOnEqual;
-    IOptable[loadWord] = &CPU::loadWord;
-    IOptable[loadByteUnsigned] = &CPU::loadByteUnsigned;
-    IOptable[jump] = &CPU::jump;
-    IOptable[storeWord] = &CPU::storeWord;
-    IOptable[storeByte] = &CPU::storeByte;
-    IOptable[orImmediate] = &CPU::orImmediate;
-    IOptable[branchOnNotEqual] = &CPU::branchOnNotEqual;
-    IOptable[jumpAndLink] = &CPU::jumpAndLink;
-    
-
+    // get file from argument 
     CPU cpu;
-
-    // get opcode
-    // if opcode == 62
-    //  access next value to get function
-    // else
-    //  optable[opcode]
-
-
-
-
-
-    cpu.programCounter = 0x0000;
-
-
-
+    char* filename = argv[1];
+    cpu.FileAnalyzerFile(filename);
+    cpu.programCounter = 0xfffc;
+    cpu.jumpAndLink(0, 0, 0x2708); //skipping 81e0 bits
 
     // setup
-    cpu.programCounter = 0xfffc;
-    char* filename = argv[1];
-    std::cout << argv[1] << std::endl;
-    FileAnalyzerFile file = FileAnalyzerFile(filename);
+    // jumping the first address of the 
+    cpu.jump(0, 0, cpu.ReadBigEndianInt32(cpu.programCounter));
 
-    uint32_t setup_address = file.ReadBigEndianInt32(0x01e0);
-    std::cout << setup_address << std::endl;
-    //the following math is no longer needed, since we will be using an array of the entire memory. <---
-    setup_address -= 0x8000; // subtracting 8000 hex in order to account for slug file starting at 0x8000
+    while (validAddress(cpu.programCounter)){
+        cpu.doInstruction();
+    }
 
-    // Use a while loop to iterate through the instructions 
-    std::cout << file.ReadBigEndianInt32(setup_address) << std::endl;
+    //temp comment 
+    // FileAnalyzerFile file = FileAnalyzerFile(filename);
+    
+    //     // get opcode
+    //     // if opcode == 62
+    //     //  access next value to get function
+    //     // else
+    //     //  optable[opcode]
+    // cpu.programCounter = 0x0000;
+    // // Clear all of RAM with zeros
+
+    // // 2. Copy data section to RAM
+
+    // // 3. Initialize stack pointer register to the end of the stack (0x6000)
+    // cpu.registers[29] = 0x6000;
+
+    
+    // // pre setup or loop
+    // cpu.programCounter = 0xfffc;
+
+    // // setup
+    // // calling JAL to setup address (jumping by number of instructions not number of bytes)
+    // cpu.jumpAndLink(0, 0, 120); // 0x01e0/4 = 120
+    // uint32_t setup_address = file.ReadBigEndianInt32(cpu.programCounter);
+
+    // // ask ta/professor - the following math is no longer needed, since we will be using an array of the entire memory. <---
+    // setup_address -= 0x8000; // subtracting 8000 hex in order to account for slug file starting at 0x8000
+
+    
+
+    // while (validAddress(file.ReadBigEndianInt32(setup_address))){
+    //     doInstruction(programCounter);
+    // }
+
+    
+    // // Use a while loop to iterate through the instructions 
+    // std::cout << file.ReadBigEndianInt32(setup_address) << std::endl;
 
     /*
 
@@ -137,12 +135,7 @@ int main(char* argv[]){
     
 
     //helper function to check if address is valid
-    bool validAddress(uint16_t addr){
-        if(0x8000 <= addr <= MAX_ADDRESS){
-            return 1;
-        }
-        return 0;
-    }
+
 
     //function to execute instruction based on current programCounter.
     void doInstruction(uint16_t* programCounter){
