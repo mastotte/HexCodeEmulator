@@ -35,6 +35,35 @@ enum function_codes { //R-type instructions function codes
     setLessThan = 36
 };
 
+    void doInstruction(CPU cpu, uint16_t* programCounter){
+        //store instructions in register[12]
+        cpu.loadWord(0, 12, file.ReadBigEndianInt32(programCounter));
+        //store opcodes in register[11]
+        cpu.shiftRightLogical(11, 12, 26);
+        // store reg_a in 13
+        cpu.shiftLeftLogical(13, 12, 6);   //deletes <opcode>
+        cpu.shiftRightLogical(13, 13, 6);  //resets our alignment
+        cpu.shiftRightLogical(13, 13, 21); //deletes rhs
+        // store reg_b in 14
+        cpu.shiftLeftLogical(14, 12, 11);  //deletes <opcode> and <reg_a>
+        cpu.shiftRightLogical(14, 14, 11); //resets our alignment
+        cpu.shiftRightLogical(14, 14, 16); //deletes rhs
+        
+        if (cpu.registers[11] == R_TYPE){
+            // store function (r-type) in 16
+            cpu.shiftLeftLogical(16, 12, 26);
+            // store reg_c in 15
+            cpu.shiftLeftLogical(15, 12, 16);
+            cpu.shiftRightLogical(15, 15, 11);
+            ROptable[cpu.registers[16]](13, 14, 15);
+        }
+        else {
+            // store immediate in 17
+            cpu.shiftLeftLogical(17, 12, 16);
+            IOptable[cpu.registers[11]](13, 14, 17);
+        }
+    }
+     
 
 
 
@@ -66,35 +95,6 @@ int main(char* argv[]){
     
 
     CPU cpu;
-    void doInstruction(CPU cpu, uint16_t* programCounter){
-        //store instructions in register[12]
-        cpu.loadWord(0, 12, file.ReadBigEndianInt32(programCounter));
-        //store opcodes in register[11]
-        cpu.shiftRightLogical(11, 12, 26);
-        // store reg_a in 13
-        cpu.shiftLeftLogical(13, 12, 6);   //deletes <opcode>
-        cpu.shiftRightLogical(13, 13, 6);  //resets our alignment
-        cpu.shiftRightLogical(13, 13, 21); //deletes rhs
-        // store reg_b in 14
-        cpu.shiftLeftLogical(14, 12, 11);  //deletes <opcode> and <reg_a>
-        cpu.shiftRightLogical(14, 14, 11); //resets our alignment
-        cpu.shiftRightLogical(14, 14, 16); //deletes rhs
-        
-        if (cpu.registers[11] == R_TYPE){
-            // store function (r-type) in 16
-            cpu.shiftLeftLogical(16, 12, 26);
-            // store reg_c in 15
-            cpu.shiftLeftLogical(15, 12, 16);
-            cpu.shiftRightLogical(15, 15, 11);
-            ROptable[cpu.registers[16]](13, 14, 15);
-        }
-        else {
-            // store immediate in 17
-            cpu.shiftLeftLogical(17, 12, 16);
-            IOptable[cpu.registers[11]](13, 14, 17);
-        }
-    }
-     
 
     // get opcode
     // if opcode == 62
