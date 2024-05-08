@@ -34,9 +34,11 @@ enum function_codes { //R-type instructions function codes
     shiftRightLogical = 35,
     setLessThan = 36
 };
-int main(char* argv[]){
 
-    
+
+
+
+int main(char* argv[]){
     // r type map
     std::unordered_map<int, std::any> ROptable;
     ROptable[subtract] = &CPU::subtract;
@@ -49,7 +51,7 @@ int main(char* argv[]){
     ROptable[shiftLeftLogical] = &CPU::shiftLeftLogical;
     ROptable[shiftRightLogical] = &CPU::shiftRightLogical;
     ROptable[setLessThan] = &CPU::setLessThan;
-    
+
     // i type map
     std::unordered_map<int, std::any> IOptable;
     IOptable[branchOnEqual] = &CPU::branchOnEqual;
@@ -61,6 +63,36 @@ int main(char* argv[]){
     IOptable[orImmediate] = &CPU::orImmediate;
     IOptable[branchOnNotEqual] = &CPU::branchOnNotEqual;
     IOptable[jumpAndLink] = &CPU::jumpAndLink;
+    
+
+    CPU cpu;
+    void doInstruction(CPU cpu, uint16_t* programCounter){
+        //store instructions in register[12]
+        cpu.loadWord(0, 12, file.ReadBigEndianInt32(programCounter));
+        //store opcodes in register[11]
+        cpu.shiftRightLogical(11, 12, 26);
+        // store reg_a in 13
+        cpu.shiftLeftLogical(13, 12, 5);
+        cpu.shiftRightLogical(13, 13, 20);
+        // store reg_b in 14
+        cpu.shiftLeftLogical(14, 12, 11);
+        cpu.shiftRightLogical(14, 14, 16);
+        
+        if (cpu.registers[11] == R_TYPE){
+            // store function (r-type) in 16
+            cpu.shiftLeftLogical(16, 12, 26);
+            // store reg_c in 15
+            cpu.shiftLeftLogical(15, 12, 16);
+            cpu.shiftRightLogical(15, 15, 11);
+            ROptable[cpu.registers[16]](13, 14, 15);
+        }
+        else {
+            // store immediate in 17
+            cpu.shiftLeftLogical(17, 12, 16);
+            IOptable[cpu.registers[11]](13, 14, 17);
+        }
+    }
+     
 
     // get opcode
     // if opcode == 62
@@ -68,7 +100,7 @@ int main(char* argv[]){
     // else
     //  optable[opcode]
 
-    CPU cpu;
+
 
 
 
