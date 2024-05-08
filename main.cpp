@@ -72,11 +72,13 @@ int main(char* argv[]){
         //store opcodes in register[11]
         cpu.shiftRightLogical(11, 12, 26);
         // store reg_a in 13
-        cpu.shiftLeftLogical(13, 12, 5);
-        cpu.shiftRightLogical(13, 13, 20);
+        cpu.shiftLeftLogical(13, 12, 6);   //deletes <opcode>
+        cpu.shiftRightLogical(13, 13, 6);  //resets our alignment
+        cpu.shiftRightLogical(13, 13, 21); //deletes rhs
         // store reg_b in 14
-        cpu.shiftLeftLogical(14, 12, 11);
-        cpu.shiftRightLogical(14, 14, 16);
+        cpu.shiftLeftLogical(14, 12, 11);  //deletes <opcode> and <reg_a>
+        cpu.shiftRightLogical(14, 14, 11); //resets our alignment
+        cpu.shiftRightLogical(14, 14, 16); //deletes rhs
         
         if (cpu.registers[11] == R_TYPE){
             // store function (r-type) in 16
