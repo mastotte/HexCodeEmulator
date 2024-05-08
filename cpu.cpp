@@ -22,7 +22,7 @@ void CPU::loadByteUnsigned(int reg_a, int reg_b, int immediate) {
     registers[reg_b] = lower8Bits;
 }
 
-void CPU::jump(int immediate) {
+void CPU::jump(int reg_a, int reg_b, int immediate) {
     programCounter = 4 * immediate;
 }
 //--------------------- 2.1.5-2.1.8 (Daniel) ---------------------
@@ -48,7 +48,7 @@ void CPU::branchOnNotEqual(int reg_a, int reg_b, int immediate) {
     }
 }
 //--------------------- 2.1.9-2.2.3 (Josh) ---------------------
-void CPU::jumpAndLink(int immediate) {
+void CPU::jumpAndLink(int reg_a, int reg_b, int immediate) {
     registers[31] = programCounter + 4;
     programCounter = 4 * immediate;
 }
@@ -77,7 +77,7 @@ void CPU::bitwise_and(int reg_a, int reg_b, int reg_c) {
     registers[reg_c] = registers[reg_a] & registers[reg_b];
 }
 
-void CPU::jumpRegister(int reg_a) {
+void CPU::jumpRegister(int reg_a, int reg_b, int reg_c) {
     programCounter = registers[reg_a];
 }
 //--------------------- 2.2.8-2.2.10 (Omid) ---------------------

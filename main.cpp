@@ -37,17 +37,30 @@ enum function_codes { //R-type instructions function codes
 int main(char* argv[]){
 
     CPU cpu;
-    std::unordered_map<int, std::any> optable;
-    optable[branchOnEqual] = &CPU::branchOnEqual;
-    optable[loadWord] = &CPU::loadWord;
-    optable[loadByteUnsigned] = &CPU::loadByteUnsigned;
-    optable[jump] = &CPU::jump;
-    optable[storeWord] = &CPU::storeWord;
-    optable[storeByte] = &CPU::storeByte;
-    optable[orImmediate] = &CPU::orImmediate;
-    optable[branchOnNotEqual] = &CPU::branchOnNotEqual;
-    optable[jumpAndLink] = &CPU::jumpAndLink;
-
+    // r type map
+    std::unordered_map<int, std::any> ROptable;
+    ROptable[subtract] = &CPU::subtract;
+    ROptable[or_Op] = &CPU::or_Op;
+    ROptable[nor] = &CPU::nor;
+    ROptable[add] = &CPU::add;
+    ROptable[shiftRightArithmetic] = &CPU::shiftRightArithmetic;
+    ROptable[bitwise_and] = &CPU::bitwise_and;
+    ROptable[jumpRegister] = &CPU::jumpRegister;
+    ROptable[shiftLeftLogical] = &CPU::shiftLeftLogical;
+    ROptable[shiftRightLogical] = &CPU::shiftRightLogical;
+    ROptable[setLessThan] = &CPU::setLessThan;
+    
+    // i type map
+    std::unordered_map<int, std::any> IOptable;
+    IOptable[branchOnEqual] = &CPU::branchOnEqual;
+    IOptable[loadWord] = &CPU::loadWord;
+    IOptable[loadByteUnsigned] = &CPU::loadByteUnsigned;
+    IOptable[jump] = &CPU::jump;
+    IOptable[storeWord] = &CPU::storeWord;
+    IOptable[storeByte] = &CPU::storeByte;
+    IOptable[orImmediate] = &CPU::orImmediate;
+    IOptable[branchOnNotEqual] = &CPU::branchOnNotEqual;
+    IOptable[jumpAndLink] = &CPU::jumpAndLink;
 
     // get opcode
     // if opcode == 62
