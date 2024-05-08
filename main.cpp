@@ -11,7 +11,7 @@
 
 
 bool validAddress(uint16_t addr){
-    if (0x8000 <= addr <= 0x16000) {
+    if (0x8000 <= addr && addr <= 0x16000) {
         return 1;
     }
     return 0;
@@ -75,14 +75,19 @@ int main(int argc, char* argv[]){
     char* filename = argv[1];
     cpu.FileAnalyzerFile(filename);
     cpu.programCounter = 0xfffc;
-    cpu.jumpAndLink(0, 0, 0x2708); //skipping 81e0 bits
+    cpu.jumpAndLink(0, 0, 0x2078); //skipping 81e0 bits
 
     // setup
     // jumping the first address of the 
-    cpu.jump(0, 0, cpu.ReadBigEndianInt32(cpu.programCounter));
 
+    // std::cout << cpu.programCounter << std::endl;
+    cpu.programCounter = 0x8280;
+    
     while (validAddress(cpu.programCounter)){
+        // cpu.loadWord(0, 12, cpu.programCounter);
+        
         cpu.doInstruction();
+        // std::cout << cpu.ReadBigEndianInt32(cpu.programCounter) << std::endl;
     }
 
     //temp comment 
@@ -145,6 +150,10 @@ int main(int argc, char* argv[]){
     
     */
 
-    
+
+// setup
+// check to see if the program counter reaches 0, if it reaches 0 breakout
+// loop
+// different after pc reaches 0 go back to the top of the loop 
 
 }

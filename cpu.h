@@ -15,9 +15,9 @@ private:
 public:
 
     uint16_t programCounter;
-    uint16_t registers[32];
+    uint32_t registers[32];
     std::unique_ptr<char[]> memory;
-    // CPU();
+    CPU();
 
     std::unordered_map<int, std::function<void(CPU&, int, int, int, int)>> ROptable;
     std::unordered_map<int, std::function<void(CPU&, int, int, int)>> IOptable;

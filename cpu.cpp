@@ -91,7 +91,7 @@ void CPU::branchOnEqual(int reg_a, int reg_b, int immediate) {
 }
 
 void CPU::loadWord(int reg_a, int reg_b, int immediate) {
-    registers[reg_b] = memory[registers[reg_a] + immediate];
+    registers[reg_b] = ReadBigEndianInt32(registers[reg_a] + immediate);
 }
 
 void CPU::loadByteUnsigned(int reg_a, int reg_b, int immediate) {
@@ -122,7 +122,11 @@ void CPU::storeByte(int reg_a, int reg_b, int immediate) {
 }
 
 void CPU::orImmediate(int reg_a, int reg_b, int immediate) {
-    registers[reg_b] = registers[reg_a] | immediate;
+    std::cout << registers[reg_a] << std::endl;
+    std::cout << registers[reg_b] << std::endl;
+    std::cout << immediate << std::endl;
+
+    registers[reg_b] = (registers[reg_a] | immediate);
 }
 
 void CPU::branchOnNotEqual(int reg_a, int reg_b, int immediate) {
@@ -137,7 +141,7 @@ void CPU::jumpAndLink(int reg_a, int reg_b, int immediate) {
 }
 
 void CPU::subtract(int reg_a, int reg_b, int reg_c, int shift_value) {
-    registers[reg_c] = registers[reg_a] = registers[reg_b];
+    registers[reg_c] = registers[reg_a] - registers[reg_b];
 }
 
 void CPU::or_Op(int reg_a, int reg_b, int reg_c, int shift_value) {
@@ -204,31 +208,6 @@ CPU::CPU() {
     IOptable[jumpAndLinkCode] = &CPU::jumpAndLink;
 }
 
-// // r type map
-// ROptable[subtract] = &CPU::subtract;
-// ROptable[or_Op] = &CPU::or_Op;
-// ROptable[nor] = &CPU::nor;
-// ROptable[add] = &CPU::add;
-// ROptable[shiftRightArithmetic] = &CPU::shiftRightArithmetic;
-// ROptable[bitwise_and] = &CPU::bitwise_and;
-// ROptable[jumpRegister] = &CPU::jumpRegister;
-// ROptable[shiftLeftLogical] = &CPU::shiftLeftLogical;
-// ROptable[shiftRightLogical] = &CPU::shiftRightLogical;
-// ROptable[setLessThan] = &CPU::setLessThan;
-
-// // i type map
-
-// IOptable[branchOnEqual] = &CPU::branchOnEqual;
-// IOptable[loadWord] = &CPU::loadWord;
-// IOptable[loadByteUnsigned] = &CPU::loadByteUnsigned;
-// IOptable[jump] = &CPU::jump;
-// IOptable[storeWord] = &CPU::storeWord;
-// IOptable[storeByte] = &CPU::storeByte;
-// IOptable[orImmediate] = &CPU::orImmediate;
-// IOptable[branchOnNotEqual] = &CPU::branchOnNotEqual;
-// IOptable[jumpAndLink] = &CPU::jumpAndLink;
-
-
 
 // Setup Functions 
 
@@ -236,29 +215,44 @@ CPU::CPU() {
 
 void CPU::doInstruction(){
     //store instructions in register[12]
-    loadWord(0, 12, ReadBigEndianInt32(programCounter));
+    std::cout << ReadBigEndianInt32(programCounter) << std::endl;
+    loadWord(0, 12, programCounter);
+    std::cout << registers[12] << std::endl;
     //store opcodes in register[11]
-    shiftRightLogical(0, 11, 12, 26);
+    shiftRightLogical(0, 12, 11, 26);
+    std::cout << registers[11] << std::endl;
+    // std::cout << registers[12] << std::endl;
     // store reg_a in 13
-    shiftLeftLogical(0, 13, 12, 5);
-    shiftRightLogical(0, 13, 13, 20);
+    shiftLeftLogical(0, 12, 13, 6);   //deletes <opcode>
+    shiftRightLogical(0, 13, 13, 6);  //resets our alignment
+    shiftRightLogical(0, 13, 13, 21); //deletes rhs
+    std::cout << "register a " << registers[13] << std::endl;
     // store reg_b in 14
-    shiftLeftLogical(0, 14, 12, 11);
-    shiftRightLogical(0, 14, 14, 16);
+    shiftLeftLogical(0, 12, 14, 11);  //deletes <opcode> and <reg_a>
+    shiftRightLogical(0, 14, 14, 11); //resets our alignment
+    shiftRightLogical(0, 14, 14, 16); //deletes rhs
+    std::cout << "register b " << registers[14] << std::endl;
     
     if (registers[11] == R_TYPE){
         // store function (r-type) in 16
-        shiftLeftLogical(0, 16, 12, 26);
+        shiftLeftLogical(0, 12, 16, 26);
         // store reg_c in 15
-        shiftLeftLogical(0, 15, 12, 16);
+        shiftLeftLogical(0, 12, 15, 16);
+        shiftRightLogical(0, 15, 15, 16);
         shiftRightLogical(0, 15, 15, 11);
-        //shift value
-        (ROptable[registers[16]])(*this, 13, 14, 15, 0);
+        // store shift value in 18
+        shiftLeftLogical(0, 12, 18, 21);
+        shiftRightLogical(0, 18, 18, 21);
+        shiftRightLogical(0, 18, 18, 6);
+        (ROptable[registers[16]])(*this, 13, 14, 15, 18);
     }
     else {
         // store immediate in 17
-        shiftLeftLogical(0, 17, 12, 16);
-        (IOptable[registers[11]])(*this, 13, 14, 17);
+        shiftLeftLogical(0, 12, 17, 16);
+        shiftRightLogical(0, 17, 17, 16);
+        uint32_t immediate = registers[17]; 
+        subtract(17, 17, 17, 0);
+        (IOptable[registers[11]])(*this, 13, 14, immediate);
     }
     
 }
