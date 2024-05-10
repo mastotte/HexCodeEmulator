@@ -182,13 +182,23 @@ void CPU::setLessThan(int reg_a, int reg_b, int reg_c, int shift_value) {
 // read and write functions
 
 
-uint8_t CPU::read8(uint32_t address){
-    return memory[address];
-}
-
 uint16_t CPU::read16(uint32_t address){
     return (memory[address] << 8) | memory[address + 1];
 }
+
+uint8_t CPU::read8(uint32_t address){
+    
+    char c;
+    if (address == 0x7100){
+        std::cin >> c; 
+        return c;
+    }
+    else{
+        return memory[address];
+    }
+    
+}
+
 
 void CPU::write8(uint32_t address, uint8_t data){
     memory[address] = data;
@@ -352,3 +362,9 @@ void CPU::doInstruction(){
     }
     
 }
+
+// seperate things out of CPU class (inheritance)
+// memory class 
+// OS class contains cpu object and memory object
+// everything runs through the OS (using the CPU and memory objects)
+// cpu class references memory
