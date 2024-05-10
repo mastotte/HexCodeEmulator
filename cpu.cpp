@@ -224,6 +224,7 @@ void CPU::dataLoad(){
     uint32_t dataAddress = ReadBigEndianInt32(0x81e8);
     for (uint32_t i = 0; i < dataSize; i++){
         uint8_t data = read8(dataAddress);
+        // std::cout << data << std::endl;
         write8(ramAddress, data);
         ramAddress++;
         dataAddress++;
@@ -252,15 +253,16 @@ void CPU::loop(){
     programCounter = 0xfffc;
     
     // std::cout << programCounter << std::endl;   
-    while(1){
-        jumpAndLink(0, 0, 0x2079); //skipping 81e0 bits
-        programCounter = ReadBigEndianInt32(programCounter);
-        while (programCounter != 0){
-            // std::cout << programCounter << std::endl;
-            doInstruction();
-        }
-        // std::cout << programCounter << std::endl;   
+    // while(1){
+    jumpAndLink(0, 0, 0x2079); //skipping 81e0 bits
+    programCounter = ReadBigEndianInt32(programCounter);
+    
+    while (programCounter > 0x8000){
+        // std::cout << programCounter << std::endl;
+        doInstruction();
     }
+        // std::cout << programCounter << std::endl;   
+    // }
     // infinite loop 
     // go back to the top of the loop when PC == 0
 }
@@ -277,7 +279,7 @@ void CPU::doInstruction(){
     //store opcodes in register[11]
     // shiftRightLogical(0, 12, 11, 26);
     uint32_t opcode = instruction >> 26;
-    // std::cout << "opcode: " << opcode << std::endl;
+    std::cout << "opcode: " << opcode << std::endl;
 
     //check if the opcode is a value function
     // if (IOptable.find(registers[11]) != IOptable.end()){
@@ -311,6 +313,8 @@ void CPU::doInstruction(){
             uint32_t function = instruction << 26;
 
             function = function >> 26;
+            std::cout << "function: " << function << std::endl;
+
 
             if (ROptable.find(function) != ROptable.end()){
                 
@@ -329,6 +333,11 @@ void CPU::doInstruction(){
                 // shiftRightLogical(0, 18, 18, 6);
                 uint32_t shift_value = instruction << 21;
                 shift_value = shift_value >> 27;
+                if (function == 9){
+                    std::cout << "reg_c " << reg_c << std::endl;
+                    std::cout << "reg_a " << reg_a << std::endl;
+                    std::cout << "reg_b " << registers[reg_b] << std::endl;
+                }
                 // (ROptable[registers[16]])(*this, 13, 14, 15, 18);
                 (ROptable[function])(*this, reg_a, reg_b, reg_b, shift_value);
             }
@@ -341,7 +350,10 @@ void CPU::doInstruction(){
             uint32_t immediate = instruction << 16;
 
             immediate = immediate >> 16;
-
+            if (opcode == 59){
+                std::cout << "reg_a " << reg_a << std::endl;
+                std::cout << "reg_b " << reg_b << std::endl;
+            }
             // subtract(17, 17, 17, 0);
             // (IOptable[registers[11]])(*this, 13, 14, immediate);
             (IOptable[opcode])(*this, reg_a, reg_b, immediate);
