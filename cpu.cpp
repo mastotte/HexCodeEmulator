@@ -58,7 +58,7 @@ uint32_t CPU::ReadBigEndianInt32(const size_t& addr) const {
 //--------------------- 2.1.1-2.14 (Milan) ---------------------
 void CPU::branchOnEqual(int reg_a, int reg_b, int immediate) {
     if (registers[reg_a] == registers[reg_b]) {
-        programCounter += 4 + 4 * immediate;
+        programCounter += 4 + (4 * immediate);
     }
 }
 
@@ -82,15 +82,18 @@ void CPU::jump(int reg_a, int reg_b, int immediate) {
 }
 //--------------------- 2.1.5-2.1.8 (Daniel) ---------------------
 void CPU::storeWord(int reg_a, int reg_b, int immediate) {
-    memory[registers[reg_a] + immediate] = registers[reg_b];
+    write16(registers[reg_a] + immediate, registers[reg_b]);
+    
+    //memory[registers[reg_a] + immediate] = registers[reg_b];
 }
 
 void CPU::storeByte(int reg_a, int reg_b, int immediate) {
-    // Extract the lower 8 bits from registers[reg_b]
-    uint8_t lower8Bits = registers[reg_b] & 0xFF;
+    // // Extract the lower 8 bits from registers[reg_b]
+    // uint8_t lower8Bits = registers[reg_b] & 0xFF;
 
-    // Store the lower 8 bits into memory at the specified address
-    memory[registers[reg_a] + immediate] = lower8Bits;
+    // // Store the lower 8 bits into memory at the specified address
+    // memory[registers[reg_a] + immediate] = lower8Bits;
+    write8(registers[reg_a] + immediate, registers[reg_b]);
 }
 
 void CPU::orImmediate(int reg_a, int reg_b, int immediate) {
@@ -99,7 +102,7 @@ void CPU::orImmediate(int reg_a, int reg_b, int immediate) {
 
 void CPU::branchOnNotEqual(int reg_a, int reg_b, int immediate) {
     if (registers[reg_a] != registers[reg_b]) {
-        programCounter += 4 + 4 * immediate;
+        programCounter += 4 + (4 * immediate);
     }
 }
 //--------------------- 2.1.9-2.2.3 (Josh) ---------------------
@@ -149,6 +152,37 @@ void CPU::setLessThan(int reg_a, int reg_b, int reg_c, int shift_value) {
 }
 
 
+// read and write functions
+
+
+uint8_t CPU::read8(uint32_t address){
+    return memory[address];
+}
+
+void CPU::write8(uint32_t address, uint8_t data){
+    memory[address] = data;
+    if (address == 0x7110) {
+        std::cout << data << std::endl;
+    }
+    else if (address == 0x7120) {
+        std::cerr << data;
+    }
+}
+
+void CPU::write16(uint32_t address, uint16_t data){
+
+    // 0000 1111 0000 1111
+    memory[address] = data >> 4;
+    memory[address + 1] = data; 
+    if (address == 0x7110) {
+        std::cout << data;
+    }
+    else if (address == 0x7120) {
+        std::cerr << data;
+    }
+}
+
+
 
 
 CPU::CPU() {
@@ -179,19 +213,71 @@ CPU::CPU() {
     IOptable[R_TYPE] = &CPU::jumpAndLink;
 }
 
+// dataLoad()
+
+void CPU::dataLoad(){
+    // get data size from 0x81f0
+    uint32_t dataSize = ReadBigEndianInt32(0x81f0);
+    // get where to store data in ram from 0x81ec
+    uint32_t ramAddress = ReadBigEndianInt32(0x81ec);
+    // read data from address 0x81e4
+    uint32_t dataAddress = ReadBigEndianInt32(0x81e8);
+    for (uint32_t i = 0; i < dataSize; i++){
+        uint8_t data = read8(dataAddress);
+        write8(ramAddress, data);
+        ramAddress++;
+        dataAddress++;
+    }
+
+}
+
+// setup()
+
+void CPU::setup(){
+    programCounter = 0xfffc;
+    jumpAndLink(0, 0, 0x2078); //skipping 81e0 bits
+    programCounter = ReadBigEndianInt32(programCounter);
+    while (programCounter > 0x8000){
+        doInstruction();
+        if (programCounter == 0){
+            break;
+        }
+    }
+}
+
+// loop()
+
+void CPU::loop(){
+    // read into loop addres
+    programCounter = 0xfffc;
+    
+    // std::cout << programCounter << std::endl;   
+    while(1){
+        jumpAndLink(0, 0, 0x2079); //skipping 81e0 bits
+        programCounter = ReadBigEndianInt32(programCounter);
+        while (programCounter != 0){
+            // std::cout << programCounter << std::endl;
+            doInstruction();
+        }
+        // std::cout << programCounter << std::endl;   
+    }
+    // infinite loop 
+    // go back to the top of the loop when PC == 0
+}
+
+
 // Setup Functions 
-
-
 
 void CPU::doInstruction(){
     //store instructions in register[12]
     // loadWord(0, 12, programCounter);
     uint32_t instruction = ReadBigEndianInt32(programCounter);
-    std::cout << "instruction: " << instruction << std::endl;
+    programCounter += 4;
+
     //store opcodes in register[11]
     // shiftRightLogical(0, 12, 11, 26);
-    uint16_t opcode = instruction >> 26;
-    std::cout << "opcode: " << opcode << std::endl;
+    uint32_t opcode = instruction >> 26;
+    // std::cout << "opcode: " << opcode << std::endl;
 
     //check if the opcode is a value function
     // if (IOptable.find(registers[11]) != IOptable.end()){
@@ -201,44 +287,48 @@ void CPU::doInstruction(){
         // shiftLeftLogical(0, 12, 13, 6);   //deletes <opcode>
         // shiftRightLogical(0, 13, 13, 6);  //resets our alignment
         // shiftRightLogical(0, 13, 13, 21); //deletes rhs
-        uint16_t reg_a = instruction << 6;
-        reg_a = reg_a >> 21;
-        std::cout << "reg_a: " << reg_a <<std::endl;
+        uint32_t reg_a = instruction << 6;
+        reg_a = reg_a >> 27;
+
 
         // store reg_b in 14
         // shiftLeftLogical(0, 12, 14, 11);  //deletes <opcode> and <reg_a>
         // shiftRightLogical(0, 14, 14, 11); //resets our alignment
         // shiftRightLogical(0, 14, 14, 16); //deletes rhs
 
-        uint16_t reg_b = instruction << 11;
+        uint32_t reg_b = instruction << 11;
         reg_b = reg_b >> 27;
-        std::cout << "reg_b: " << reg_b<< std::endl;
+
         
         
         // if (registers[11] == R_TYPE){
         if (opcode == R_TYPE){
             // check if function code is valid
             // if (ROptable.find(registers[11]) != ROptable.end()){
-            if (ROptable.find(opcode) != ROptable.end()){
-                // store function (r-type) in 16
-                shiftLeftLogical(0, 12, 16, 26);
-                uint16_t function = instruction << 26;
+            // store function (r-type) in 16
+            // shiftLeftLogical(0, 12, 16, 26);
 
-                std::cout << "r function " << registers[16] << std::endl;
+            uint32_t function = instruction << 26;
+
+            function = function >> 26;
+
+            if (ROptable.find(function) != ROptable.end()){
+                
+                
+                
                 // store reg_c in 15
                 // shiftLeftLogical(0, 12, 15, 16);
                 // shiftRightLogical(0, 15, 15, 16);
                 // shiftRightLogical(0, 15, 15, 11);
-                uint16_t reg_c = instruction << 16;
+                uint32_t reg_c = instruction << 16;
                 reg_c = reg_c >> 27;
 
                 // store shift value in 18
                 // shiftLeftLogical(0, 12, 18, 21);
                 // shiftRightLogical(0, 18, 18, 21);
                 // shiftRightLogical(0, 18, 18, 6);
-                uint16_t shift_value = instruction << 21;
+                uint32_t shift_value = instruction << 21;
                 shift_value = shift_value >> 27;
-
                 // (ROptable[registers[16]])(*this, 13, 14, 15, 18);
                 (ROptable[function])(*this, reg_a, reg_b, reg_b, shift_value);
             }
@@ -249,7 +339,7 @@ void CPU::doInstruction(){
             // shiftRightLogical(0, 17, 17, 16);
             // uint32_t immediate = registers[17];
             uint32_t immediate = instruction << 16;
-            std::cout << "immediate: " << immediate <<std::endl;
+
             immediate = immediate >> 16;
 
             // subtract(17, 17, 17, 0);
@@ -257,5 +347,4 @@ void CPU::doInstruction(){
             (IOptable[opcode])(*this, reg_a, reg_b, immediate);
         }
     }
-    programCounter += 4;
 }

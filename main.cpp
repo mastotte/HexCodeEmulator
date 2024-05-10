@@ -9,88 +9,26 @@
 #include "FileAnalyzerFile.h"
 #include "cpu.h"
 
-
-bool validAddress(uint16_t addr){
-    if (0x8000 <= addr && addr <= 0x10000) {
-        return 1;
-    }
-    return 0;
-}
-
-enum Opcode {
-    branchOnEqual = 0,
-    loadWord = 2,
-    loadByteUnsigned = 16,
-    jump = 36,
-    storeWord = 48,
-    storeByte = 50,
-    orImmediate = 53,
-    branchOnNotEqual = 59,
-    jumpAndLink = 61,
-    R_TYPE = 62 // note that all R-type instructions have same opcode, but diff function #s 
-};
-
-enum function_codes { //R-type instructions function codes
-    subtract = 0,
-    or_Op = 4,
-    nor = 7,
-    add = 9,
-    shiftRightArithmetic = 11,
-    bitwise_and = 24,
-    jumpRegister = 28,
-    shiftLeftLogical = 32,
-    shiftRightLogical = 35,
-    setLessThan = 36
-};
-
 int main(int argc, char* argv[]){
-
-    // std::unordered_map<int, std::any> ROptable;
-    // ROptable[subtract] = &CPU::subtract;
-    // ROptable[or_Op] = &CPU::or_Op;
-    // ROptable[nor] = &CPU::nor;
-    // ROptable[add] = &CPU::add;
-    // ROptable[shiftRightArithmetic] = &CPU::shiftRightArithmetic;
-    // ROptable[bitwise_and] = &CPU::bitwise_and;
-    // ROptable[jumpRegister] = &CPU::jumpRegister;
-    // ROptable[shiftLeftLogical] = &CPU::shiftLeftLogical;
-    // ROptable[shiftRightLogical] = &CPU::shiftRightLogical;
-    // ROptable[setLessThan] = &CPU::setLessThan;
-
-    // // i type map
-    // std::unordered_map<int, std::any> IOptable;
-    // IOptable[branchOnEqual] = &CPU::branchOnEqual;
-    // IOptable[loadWord] = &CPU::loadWord;
-    // IOptable[loadByteUnsigned] = &CPU::loadByteUnsigned;
-    // IOptable[jump] = &CPU::jump;
-    // IOptable[storeWord] = &CPU::storeWord;
-    // IOptable[storeByte] = &CPU::storeByte;
-    // IOptable[orImmediate] = &CPU::orImmediate;
-    // IOptable[branchOnNotEqual] = &CPU::branchOnNotEqual;
-    // IOptable[jumpAndLink] = &CPU::jumpAndLink;
-
 
     // get file from argument 
     CPU cpu;
     char* filename = argv[1];
     cpu.FileAnalyzerFile(filename);
-    cpu.programCounter = 0xfffc;
-    cpu.jumpAndLink(0, 0, 0x2078); //skipping 81e0 bits
 
-    // setup
-    // jumping the first address of the 
 
-    // std::cout << cpu.programCounter << std::endl;
-    cpu.programCounter = 0x8280;
+    // get data size from 0x81f0
+    // get where to store data in ram from 0x81ec
+    // read data from address 0x81e4
+    cpu.dataLoad();
+
+    // initialize stack pointer to 0x6000
+    cpu.registers[29] = 0x6000;
     
-    while (cpu.programCounter <= 0x82EC){
-        cpu.doInstruction();
-        std::cout << "program counter "<< cpu.programCounter << std::endl;
-        if (cpu.programCounter == 0){
-            break;
-        }
-    }
-    std::cout << "out "<< cpu.programCounter << std::endl;
+    cpu.setup();
+
+    cpu.loop();
+
     //temp comment 
     // FileAnalyzerFile file = FileAnalyzerFile(filename);
     
