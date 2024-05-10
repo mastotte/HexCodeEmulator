@@ -11,7 +11,7 @@
 
 
 bool validAddress(uint16_t addr){
-    if (0x8000 <= addr && addr <= 0x16000) {
+    if (0x8000 <= addr && addr <= 0x10000) {
         return 1;
     }
     return 0;
@@ -83,13 +83,14 @@ int main(int argc, char* argv[]){
     // std::cout << cpu.programCounter << std::endl;
     cpu.programCounter = 0x8280;
     
-    while (validAddress(cpu.programCounter)){
-        // cpu.loadWord(0, 12, cpu.programCounter);
-        
+    while (cpu.programCounter <= 0x82EC){
         cpu.doInstruction();
-        // std::cout << cpu.ReadBigEndianInt32(cpu.programCounter) << std::endl;
+        std::cout << "program counter "<< cpu.programCounter << std::endl;
+        if (cpu.programCounter == 0){
+            break;
+        }
     }
-
+    std::cout << "out "<< cpu.programCounter << std::endl;
     //temp comment 
     // FileAnalyzerFile file = FileAnalyzerFile(filename);
     

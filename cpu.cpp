@@ -46,34 +46,6 @@ uint32_t CPU::ReadBigEndianInt32(const size_t& addr) const {
 }
 
 
-// enums and unordered maps for tables
-
-enum Opcode {
-    branchOnEqualCode = 0,
-    loadWordCode = 2,
-    loadByteUnsignedCode = 16,
-    jumpCode = 36,
-    storeWordCode = 48,
-    storeByteCode = 50,
-    orImmediateCode = 53,
-    branchOnNotEqualCode = 59,
-    jumpAndLinkCode = 61,
-    R_TYPE = 62 // note that all R-type instructions have same opcode, but diff function #s 
-};
-
-enum function_codes { //R-type instructions function codes
-    subtractCode = 0,
-    or_OpCode = 4,
-    norCode = 7,
-    addCode = 9,
-    shiftRightArithmeticCode = 11,
-    bitwise_andCode = 24,
-    jumpRegisterCode = 28,
-    shiftLeftLogicalCode = 32,
-    shiftRightLogicalCode = 35,
-    setLessThanCode = 36
-};
-
 
 
 // }
@@ -91,7 +63,7 @@ void CPU::branchOnEqual(int reg_a, int reg_b, int immediate) {
 }
 
 void CPU::loadWord(int reg_a, int reg_b, int immediate) {
-    registers[reg_b] = ReadBigEndianInt32(registers[reg_a] + immediate);
+    registers[reg_b] = memory[registers[reg_a] + immediate];
 }
 
 void CPU::loadByteUnsigned(int reg_a, int reg_b, int immediate) {
@@ -122,10 +94,6 @@ void CPU::storeByte(int reg_a, int reg_b, int immediate) {
 }
 
 void CPU::orImmediate(int reg_a, int reg_b, int immediate) {
-    std::cout << registers[reg_a] << std::endl;
-    std::cout << registers[reg_b] << std::endl;
-    std::cout << immediate << std::endl;
-
     registers[reg_b] = (registers[reg_a] | immediate);
 }
 
@@ -195,6 +163,8 @@ CPU::CPU() {
     ROptable[shiftLeftLogicalCode] = &CPU::shiftLeftLogical;
     ROptable[shiftRightLogicalCode] = &CPU::shiftRightLogical;
     ROptable[setLessThanCode] = &CPU::setLessThan;
+    // placeholder for function validation
+    
 
     // Initialize IOptable
     IOptable[branchOnEqualCode] = &CPU::branchOnEqual;
@@ -206,8 +176,8 @@ CPU::CPU() {
     IOptable[orImmediateCode] = &CPU::orImmediate;
     IOptable[branchOnNotEqualCode] = &CPU::branchOnNotEqual;
     IOptable[jumpAndLinkCode] = &CPU::jumpAndLink;
+    IOptable[R_TYPE] = &CPU::jumpAndLink;
 }
-
 
 // Setup Functions 
 
@@ -215,44 +185,77 @@ CPU::CPU() {
 
 void CPU::doInstruction(){
     //store instructions in register[12]
-    std::cout << ReadBigEndianInt32(programCounter) << std::endl;
-    loadWord(0, 12, programCounter);
-    std::cout << registers[12] << std::endl;
+    // loadWord(0, 12, programCounter);
+    uint32_t instruction = ReadBigEndianInt32(programCounter);
+    std::cout << "instruction: " << instruction << std::endl;
     //store opcodes in register[11]
-    shiftRightLogical(0, 12, 11, 26);
-    std::cout << registers[11] << std::endl;
-    // std::cout << registers[12] << std::endl;
-    // store reg_a in 13
-    shiftLeftLogical(0, 12, 13, 6);   //deletes <opcode>
-    shiftRightLogical(0, 13, 13, 6);  //resets our alignment
-    shiftRightLogical(0, 13, 13, 21); //deletes rhs
-    std::cout << "register a " << registers[13] << std::endl;
-    // store reg_b in 14
-    shiftLeftLogical(0, 12, 14, 11);  //deletes <opcode> and <reg_a>
-    shiftRightLogical(0, 14, 14, 11); //resets our alignment
-    shiftRightLogical(0, 14, 14, 16); //deletes rhs
-    std::cout << "register b " << registers[14] << std::endl;
-    
-    if (registers[11] == R_TYPE){
-        // store function (r-type) in 16
-        shiftLeftLogical(0, 12, 16, 26);
-        // store reg_c in 15
-        shiftLeftLogical(0, 12, 15, 16);
-        shiftRightLogical(0, 15, 15, 16);
-        shiftRightLogical(0, 15, 15, 11);
-        // store shift value in 18
-        shiftLeftLogical(0, 12, 18, 21);
-        shiftRightLogical(0, 18, 18, 21);
-        shiftRightLogical(0, 18, 18, 6);
-        (ROptable[registers[16]])(*this, 13, 14, 15, 18);
+    // shiftRightLogical(0, 12, 11, 26);
+    uint16_t opcode = instruction >> 26;
+    std::cout << "opcode: " << opcode << std::endl;
+
+    //check if the opcode is a value function
+    // if (IOptable.find(registers[11]) != IOptable.end()){
+    if (IOptable.find(opcode) != IOptable.end()){
+
+        // store reg_a in 13
+        // shiftLeftLogical(0, 12, 13, 6);   //deletes <opcode>
+        // shiftRightLogical(0, 13, 13, 6);  //resets our alignment
+        // shiftRightLogical(0, 13, 13, 21); //deletes rhs
+        uint16_t reg_a = instruction << 6;
+        reg_a = reg_a >> 21;
+        std::cout << "reg_a: " << reg_a <<std::endl;
+
+        // store reg_b in 14
+        // shiftLeftLogical(0, 12, 14, 11);  //deletes <opcode> and <reg_a>
+        // shiftRightLogical(0, 14, 14, 11); //resets our alignment
+        // shiftRightLogical(0, 14, 14, 16); //deletes rhs
+
+        uint16_t reg_b = instruction << 11;
+        reg_b = reg_b >> 27;
+        std::cout << "reg_b: " << reg_b<< std::endl;
+        
+        
+        // if (registers[11] == R_TYPE){
+        if (opcode == R_TYPE){
+            // check if function code is valid
+            // if (ROptable.find(registers[11]) != ROptable.end()){
+            if (ROptable.find(opcode) != ROptable.end()){
+                // store function (r-type) in 16
+                shiftLeftLogical(0, 12, 16, 26);
+                uint16_t function = instruction << 26;
+
+                std::cout << "r function " << registers[16] << std::endl;
+                // store reg_c in 15
+                // shiftLeftLogical(0, 12, 15, 16);
+                // shiftRightLogical(0, 15, 15, 16);
+                // shiftRightLogical(0, 15, 15, 11);
+                uint16_t reg_c = instruction << 16;
+                reg_c = reg_c >> 27;
+
+                // store shift value in 18
+                // shiftLeftLogical(0, 12, 18, 21);
+                // shiftRightLogical(0, 18, 18, 21);
+                // shiftRightLogical(0, 18, 18, 6);
+                uint16_t shift_value = instruction << 21;
+                shift_value = shift_value >> 27;
+
+                // (ROptable[registers[16]])(*this, 13, 14, 15, 18);
+                (ROptable[function])(*this, reg_a, reg_b, reg_b, shift_value);
+            }
+        }
+        else {
+            // store immediate in 17
+            // shiftLeftLogical(0, 12, 17, 16);
+            // shiftRightLogical(0, 17, 17, 16);
+            // uint32_t immediate = registers[17];
+            uint32_t immediate = instruction << 16;
+            std::cout << "immediate: " << immediate <<std::endl;
+            immediate = immediate >> 16;
+
+            // subtract(17, 17, 17, 0);
+            // (IOptable[registers[11]])(*this, 13, 14, immediate);
+            (IOptable[opcode])(*this, reg_a, reg_b, immediate);
+        }
     }
-    else {
-        // store immediate in 17
-        shiftLeftLogical(0, 12, 17, 16);
-        shiftRightLogical(0, 17, 17, 16);
-        uint32_t immediate = registers[17]; 
-        subtract(17, 17, 17, 0);
-        (IOptable[registers[11]])(*this, 13, 14, immediate);
-    }
-    
+    programCounter += 4;
 }

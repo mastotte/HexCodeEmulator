@@ -19,6 +19,7 @@ public:
     std::unique_ptr<char[]> memory;
     CPU();
 
+
     std::unordered_map<int, std::function<void(CPU&, int, int, int, int)>> ROptable;
     std::unordered_map<int, std::function<void(CPU&, int, int, int)>> IOptable;
 
@@ -50,6 +51,36 @@ public:
     void setLessThan(int reg_a, int reg_b, int reg_c, int shift_value);
 
     void doInstruction();
+
+        
+    // enums and unordered maps for tables
+
+    enum Opcode {
+        branchOnEqualCode = 0,
+        loadWordCode = 2,
+        loadByteUnsignedCode = 16,
+        jumpCode = 36,
+        storeWordCode = 48,
+        storeByteCode = 50,
+        orImmediateCode = 53,
+        branchOnNotEqualCode = 59,
+        jumpAndLinkCode = 61,
+        R_TYPE = 62, // note that all R-type instructions have same opcode, but diff function #s 
+    };
+
+    enum function_codes { //R-type instructions function codes
+        subtractCode = 0,
+        or_OpCode = 4,
+        norCode = 7,
+        addCode = 9,
+        shiftRightArithmeticCode = 11,
+        bitwise_andCode = 24,
+        jumpRegisterCode = 28,
+        shiftLeftLogicalCode = 32,
+        shiftRightLogicalCode = 35,
+        setLessThanCode = 36
+    };
+
 };
 
 
