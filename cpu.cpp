@@ -8,6 +8,9 @@
 #include <iostream>
 
 
+#define STOP_ADDRESS ((volatile uint8_t*)(0x7200))
+#define STOP *(STOP_ADDRESS) = 0
+
 // File analyzer functions changed into cpu versions
 void CPU::FileAnalyzerFile(const std::string& filename){
     // Open the file
@@ -58,31 +61,36 @@ uint32_t CPU::ReadBigEndianInt32(const size_t& addr) const {
 //--------------------- 2.1.1-2.14 (Milan) ---------------------
 void CPU::branchOnEqual(int reg_a, int reg_b, int immediate) {
     if (registers[reg_a] == registers[reg_b]) {
+        programCounter -= 4;
         programCounter += 4 + (4 * immediate);
     }
 }
 
 void CPU::loadWord(int reg_a, int reg_b, int immediate) {
-    registers[reg_b] = memory[registers[reg_a] + immediate];
+    registers[reg_b] = read16(registers[reg_a] + immediate);
 }
 
 void CPU::loadByteUnsigned(int reg_a, int reg_b, int immediate) {
-    // Read a byte from memory
-    uint16_t byteFromMemory = memory[registers[reg_a] + immediate];
+    registers[reg_b] = read8(registers[reg_a] + immediate);
+    // // Read a byte from memory
+    // uint16_t byteFromMemory = memory[registers[reg_a] + immediate];
 
-    // Extract the lower 8 bits
-    uint8_t lower8Bits = byteFromMemory & 0xFF;
+    // // Extract the lower 8 bits
+    // uint8_t lower8Bits = byteFromMemory & 0xFF;
 
-    // Store the extracted value into registers[reg_b]
-    registers[reg_b] = lower8Bits;
+    // // Store the extracted value into registers[reg_b]
+    // registers[reg_b] = lower8Bits;
 }
 
 void CPU::jump(int reg_a, int reg_b, int immediate) {
+    programCounter -= 4;
     programCounter = 4 * immediate;
+    // std::cout << "j" << std::endl;
 }
 //--------------------- 2.1.5-2.1.8 (Daniel) ---------------------
 void CPU::storeWord(int reg_a, int reg_b, int immediate) {
     write16(registers[reg_a] + immediate, registers[reg_b]);
+    // std::cout << "storew" << std::endl;
     
     //memory[registers[reg_a] + immediate] = registers[reg_b];
 }
@@ -93,62 +101,81 @@ void CPU::storeByte(int reg_a, int reg_b, int immediate) {
 
     // // Store the lower 8 bits into memory at the specified address
     // memory[registers[reg_a] + immediate] = lower8Bits;
+
     write8(registers[reg_a] + immediate, registers[reg_b]);
+    // std::cout << "store" << std::endl;
 }
 
 void CPU::orImmediate(int reg_a, int reg_b, int immediate) {
     registers[reg_b] = (registers[reg_a] | immediate);
+    // std::cout << "ori" << std::endl;
 }
 
 void CPU::branchOnNotEqual(int reg_a, int reg_b, int immediate) {
     if (registers[reg_a] != registers[reg_b]) {
-        programCounter += 4 + (4 * immediate);
+        programCounter -= 4;
+        programCounter += 4 + 4 * immediate;
     }
+    // std::cout << "benq" << std::endl;
 }
 //--------------------- 2.1.9-2.2.3 (Josh) ---------------------
 void CPU::jumpAndLink(int reg_a, int reg_b, int immediate) {
     registers[31] = programCounter + 4;
+    programCounter -= 4;
     programCounter = 4 * immediate;
+    
+    // std::cout << "jal" << std::endl;
 }
 
 void CPU::subtract(int reg_a, int reg_b, int reg_c, int shift_value) {
     registers[reg_c] = registers[reg_a] - registers[reg_b];
+    // std::cout << "sub" << std::endl;
 }
 
 void CPU::or_Op(int reg_a, int reg_b, int reg_c, int shift_value) {
     registers[reg_c] = registers[reg_a] | registers[reg_b];
+    // std::cout << "or" << std::endl;
 }
 
 void CPU::nor(int reg_a, int reg_b, int reg_c, int shift_value) {
-    registers[reg_c] = ~(registers[reg_a] | registers[reg_b]);
+    registers[reg_c] = !(registers[reg_a] | registers[reg_b]);
+    // std::cout << "nor" << std::endl;
 }
 //--------------------- 2.2.4-2.2.7 (Max) --------------------
 void CPU::add(int reg_a, int reg_b, int reg_c, int shift_value) {
+    // std::cout << "add" << std::endl;
     registers[reg_c] = registers[reg_a] + registers[reg_b];
 }
 
 void CPU::shiftRightArithmetic(int reg_a,int reg_b, int reg_c, int shift_value) {
+    // std::cout << "sra" << std::endl;
     registers[reg_c] = (signed)registers[reg_b] >> shift_value;
 }
 
 void CPU::bitwise_and(int reg_a, int reg_b, int reg_c, int shift_value) {
     registers[reg_c] = registers[reg_a] & registers[reg_b];
+    // std::cout << "and" << std::endl;
 }
 
 void CPU::jumpRegister(int reg_a, int reg_b, int reg_c, int shift_value) {
+    programCounter -= 4;
     programCounter = registers[reg_a];
+    // std::cout << "jr" << std::endl;
 }
 //--------------------- 2.2.8-2.2.10 (Omid) ---------------------
 void CPU::shiftLeftLogical(int reg_a,int reg_b, int reg_c, int shift_value) {
-    registers[reg_c] = registers[reg_b] << shift_value;
+    registers[reg_c] = (unsigned)registers[reg_b] << shift_value;
+    // std::cout << "sll" << std::endl;
 }
 
 void CPU::shiftRightLogical(int reg_a,int reg_b, int reg_c, int shift_value) {
-    registers[reg_c] = registers[reg_b] >> shift_value;
+    registers[reg_c] = (unsigned)registers[reg_b] >> shift_value;
+    // std::cout << "srl" << std::endl;
 }
 
 void CPU::setLessThan(int reg_a, int reg_b, int reg_c, int shift_value) {
     registers[reg_c] = (registers[reg_a] < registers[reg_b]);
+    // std::cout << "slt" << std::endl;
 }
 
 
@@ -159,26 +186,37 @@ uint8_t CPU::read8(uint32_t address){
     return memory[address];
 }
 
+uint16_t CPU::read16(uint32_t address){
+    return (memory[address] << 8) | memory[address + 1];
+}
+
 void CPU::write8(uint32_t address, uint8_t data){
     memory[address] = data;
     if (address == 0x7110) {
-        std::cout << data << std::endl;
+        std::cout << data;
     }
     else if (address == 0x7120) {
         std::cerr << data;
     }
+    else if (address == 0x7200) {
+        exit(EXIT_SUCCESS);
+        // std::cout << data;
+        
+    }
 }
 
 void CPU::write16(uint32_t address, uint16_t data){
-
-    // 0000 1111 0000 1111
-    memory[address] = data >> 4;
+    memory[address] = data >> 8;
     memory[address + 1] = data; 
     if (address == 0x7110) {
         std::cout << data;
     }
     else if (address == 0x7120) {
         std::cerr << data;
+    }
+    else if (address == 0x7200) {
+        exit(EXIT_SUCCESS);
+        // std::cout << data;
     }
 }
 
@@ -250,19 +288,18 @@ void CPU::setup(){
 
 void CPU::loop(){
     // read into loop addres
+    
+    
+    // std::cout << programCounter << std::endl;  
     programCounter = 0xfffc;
-    
-    // std::cout << programCounter << std::endl;   
-    // while(1){
-    jumpAndLink(0, 0, 0x2079); //skipping 81e0 bits
-    programCounter = ReadBigEndianInt32(programCounter);
-    
-    while (programCounter > 0x8000){
-        // std::cout << programCounter << std::endl;
-        doInstruction();
+    jumpAndLink(0, 0, 0x2079);
+    uint32_t loopAddress = ReadBigEndianInt32(programCounter);
+    while(1){
+        programCounter = loopAddress;
+        while (programCounter != 0){
+            doInstruction();
+        }
     }
-        // std::cout << programCounter << std::endl;   
-    // }
     // infinite loop 
     // go back to the top of the loop when PC == 0
 }
@@ -276,87 +313,42 @@ void CPU::doInstruction(){
     uint32_t instruction = ReadBigEndianInt32(programCounter);
     programCounter += 4;
 
-    //store opcodes in register[11]
-    // shiftRightLogical(0, 12, 11, 26);
     uint32_t opcode = instruction >> 26;
-    std::cout << "opcode: " << opcode << std::endl;
-
+    // std::cout << "opcode: " << opcode << std::endl;
     //check if the opcode is a value function
-    // if (IOptable.find(registers[11]) != IOptable.end()){
     if (IOptable.find(opcode) != IOptable.end()){
-
-        // store reg_a in 13
-        // shiftLeftLogical(0, 12, 13, 6);   //deletes <opcode>
-        // shiftRightLogical(0, 13, 13, 6);  //resets our alignment
-        // shiftRightLogical(0, 13, 13, 21); //deletes rhs
         uint32_t reg_a = instruction << 6;
         reg_a = reg_a >> 27;
-
-
-        // store reg_b in 14
-        // shiftLeftLogical(0, 12, 14, 11);  //deletes <opcode> and <reg_a>
-        // shiftRightLogical(0, 14, 14, 11); //resets our alignment
-        // shiftRightLogical(0, 14, 14, 16); //deletes rhs
-
         uint32_t reg_b = instruction << 11;
         reg_b = reg_b >> 27;
-
-        
-        
         // if (registers[11] == R_TYPE){
         if (opcode == R_TYPE){
             // check if function code is valid
-            // if (ROptable.find(registers[11]) != ROptable.end()){
-            // store function (r-type) in 16
-            // shiftLeftLogical(0, 12, 16, 26);
 
             uint32_t function = instruction << 26;
 
             function = function >> 26;
-            std::cout << "function: " << function << std::endl;
+            // std::cout << "function: " << function << std::endl;
 
 
             if (ROptable.find(function) != ROptable.end()){
-                
-                
-                
-                // store reg_c in 15
-                // shiftLeftLogical(0, 12, 15, 16);
-                // shiftRightLogical(0, 15, 15, 16);
-                // shiftRightLogical(0, 15, 15, 11);
+            
                 uint32_t reg_c = instruction << 16;
                 reg_c = reg_c >> 27;
 
-                // store shift value in 18
-                // shiftLeftLogical(0, 12, 18, 21);
-                // shiftRightLogical(0, 18, 18, 21);
-                // shiftRightLogical(0, 18, 18, 6);
                 uint32_t shift_value = instruction << 21;
                 shift_value = shift_value >> 27;
-                if (function == 9){
-                    std::cout << "reg_c " << reg_c << std::endl;
-                    std::cout << "reg_a " << reg_a << std::endl;
-                    std::cout << "reg_b " << registers[reg_b] << std::endl;
-                }
-                // (ROptable[registers[16]])(*this, 13, 14, 15, 18);
-                (ROptable[function])(*this, reg_a, reg_b, reg_b, shift_value);
+                
+                (ROptable[function])(*this, reg_a, reg_b, reg_c, shift_value);
             }
         }
         else {
-            // store immediate in 17
-            // shiftLeftLogical(0, 12, 17, 16);
-            // shiftRightLogical(0, 17, 17, 16);
-            // uint32_t immediate = registers[17];
-            uint32_t immediate = instruction << 16;
 
+            uint32_t immediate = instruction << 16;
             immediate = immediate >> 16;
-            if (opcode == 59){
-                std::cout << "reg_a " << reg_a << std::endl;
-                std::cout << "reg_b " << reg_b << std::endl;
-            }
-            // subtract(17, 17, 17, 0);
-            // (IOptable[registers[11]])(*this, 13, 14, immediate);
             (IOptable[opcode])(*this, reg_a, reg_b, immediate);
         }
+        
     }
+    
 }
