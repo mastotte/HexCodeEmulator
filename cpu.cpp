@@ -11,6 +11,8 @@
 #define STOP_ADDRESS ((volatile uint8_t*)(0x7200))
 #define STOP *(STOP_ADDRESS) = 0
 
+
+// The CPU should only be in charge of running the instruction at the current program counter and incrementing the program counter when necessary. 
 // File analyzer functions changed into cpu versions
 void CPU::FileAnalyzerFile(const std::string& filename){
     // Open the file
