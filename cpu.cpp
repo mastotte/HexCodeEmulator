@@ -24,19 +24,20 @@ void CPU::FileAnalyzerFile(const std::string& filename){
         return;
     }
 
-    // Get the size of the file
-    size_t file_size = file.tellg();
 
-    // Reset file pointer to the beginning
-    file.seekg(0, std::ios::beg);
+/*
+Note the .slug file size is ALWAYS 0x8000 bytes in size per Ben's email. 
+We also don't need to seek to the beginning.
+*/
+
     
     // Allocate memory to store the contents of the file
     // std::unique_ptr<char[]> contents;
-    memory = std::make_unique<char[]>(0x8000+file_size);
+    memory = std::make_unique<char[]>(0x8000);
     
     // stores value (displays differently based on computer), 1 byte in each index) actually reading in 4 at a time (the actual instruction)
     // Read the contents of the file into the allocated memory
-    file.read((memory.get() + 0x8000), file_size);
+    file.read((memory.get() + 0x8000), 0x8000);
     // Close the file
     file.close();
 }
@@ -237,6 +238,21 @@ void CPU::write16(uint32_t address, uint16_t data){
 
 CPU::CPU() {
     // Initialize ROptable
+    ROptable={ 
+        {subtractCode, &CPU::subtract},
+            {or_OpCode, &CPU::or_Op},
+            {norCode, &CPU::nor},
+            {addCode, &CPU::add},
+            {shiftRightArithmeticCode, &CPU::shiftRightArithmetic},
+            {bitwise_andCode, &CPU::bitwise_and},
+            {jumpRegisterCode, &CPU::jumpRegister},
+            {shiftLeftLogicalCode, &CPU::shiftLeftLogical},
+            {shiftRightLogicalCode, &CPU::shiftRightLogical},
+            {setLessThanCode, &CPU::setLessThan}
+        };
+
+    
+    /*
     ROptable[subtractCode] = &CPU::subtract;
     ROptable[or_OpCode] = &CPU::or_Op;
     ROptable[norCode] = &CPU::nor;
@@ -247,10 +263,27 @@ CPU::CPU() {
     ROptable[shiftLeftLogicalCode] = &CPU::shiftLeftLogical;
     ROptable[shiftRightLogicalCode] = &CPU::shiftRightLogical;
     ROptable[setLessThanCode] = &CPU::setLessThan;
+    */
     // placeholder for function validation
     
 
     // Initialize IOptable
+
+        IOptable = {
+            {branchOnEqualCode, &CPU::branchOnEqual},
+            {loadWordCode, &CPU::loadWord},
+            {loadByteUnsignedCode, &CPU::loadByteUnsigned},
+            {jumpCode, &CPU::jump},
+            {storeWordCode, &CPU::storeWord},
+            {storeByteCode, &CPU::storeByte},
+            {orImmediateCode, &CPU::orImmediate},
+            {branchOnNotEqualCode, &CPU::branchOnNotEqual},
+            {jumpAndLinkCode, &CPU::jumpAndLink},
+            {R_TYPE, &CPU::jumpAndLink} 
+        };
+
+
+    /*
     IOptable[branchOnEqualCode] = &CPU::branchOnEqual;
     IOptable[loadWordCode] = &CPU::loadWord;
     IOptable[loadByteUnsignedCode] = &CPU::loadByteUnsigned;
@@ -261,6 +294,7 @@ CPU::CPU() {
     IOptable[branchOnNotEqualCode] = &CPU::branchOnNotEqual;
     IOptable[jumpAndLinkCode] = &CPU::jumpAndLink;
     IOptable[R_TYPE] = &CPU::jumpAndLink;
+    */
 }
 
 // dataLoad()
