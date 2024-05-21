@@ -12,54 +12,7 @@
 #define STOP *(STOP_ADDRESS) = 0
 
 
-// The CPU should only be in charge of running the instruction at the current program counter and incrementing the program counter when necessary. 
-// File analyzer functions changed into cpu versions
-void CPU::FileAnalyzerFile(const std::string& filename){
-    // Open the file
-    std::ifstream file(filename, std::ios::binary | std::ios::ate);
-
-    // Check if file is opened successfully
-    if (!file.is_open()) {
-        std::cerr << "Error opening file: " << filename << std::endl;
-        return;
-    }
-
-
-/*
-Note the .slug file size is ALWAYS 0x8000 bytes in size per Ben's email. 
-We also don't need to seek to the beginning.
-*/
-
-    
-    // Allocate memory to store the contents of the file
-    // std::unique_ptr<char[]> contents;
-    memory = std::make_unique<char[]>(0x8000);
-    
-    // stores value (displays differently based on computer), 1 byte in each index) actually reading in 4 at a time (the actual instruction)
-    // Read the contents of the file into the allocated memory
-    file.read((memory.get() + 0x8000), 0x8000);
-    // Close the file
-    file.close();
-}
-
-uint32_t CPU::ReadBigEndianInt32(const size_t& addr) const {
-  uint32_t out = 0;
-  for (int i = 0; i < 4; i++) {
-    out <<= 8;
-    out |= (uint8_t)memory[addr + i];
-  }
-  return out;
-}
-
-
-
-
-// }
-
-
-
-
-
+// The CPU should only be in charge of running the instruction at the current program counter and incrementing the program counter when necessary.
 // Instruction Functions
 //--------------------- 2.1.1-2.14 (Milan) ---------------------
 void CPU::branchOnEqual(int reg_a, int reg_b, int immediate) {
@@ -182,10 +135,7 @@ void CPU::setLessThan(int reg_a, int reg_b, int reg_c, int shift_value) {
 }
 
 
-
-
-
-
+// read and write functions
 
 CPU::CPU() {
     // Initialize ROptable
@@ -247,12 +197,6 @@ CPU::CPU() {
     IOptable[R_TYPE] = &CPU::jumpAndLink;
     */
 }
-
-
-
-// Setup Functions 
-
-
 // seperate things out of CPU class (inheritance)
 // memory class 
 // OS class contains cpu object and memory object

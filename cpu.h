@@ -23,8 +23,7 @@ public:
     std::unordered_map<int, std::function<void(CPU&, int, int, int, int)>> ROptable;
     std::unordered_map<int, std::function<void(CPU&, int, int, int)>> IOptable;
 
-    void FileAnalyzerFile(const std::string& filename);
-    uint32_t ReadBigEndianInt32(const size_t& addr) const;
+
 
     void branchOnEqual(int reg_a, int reg_b, int immediate);
     void loadWord(int reg_a, int reg_b, int immediate);

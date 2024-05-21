@@ -17,6 +17,10 @@ private:
     
 
 public:
+
+    void FileAnalyzerFile(const std::string& filename);
+    uint32_t ReadBigEndianInt32(const size_t& addr) const;
+
     uint8_t read8(uint32_t address);
     uint16_t read16(uint32_t address);
 

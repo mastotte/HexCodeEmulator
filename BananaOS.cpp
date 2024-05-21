@@ -33,17 +33,21 @@ input: tests io (a/b, up/down, left/right, select/start, stdin)
 // dataLoad()
 #include "BananaOS.h"
 
+/* How can cpu access memory that is defined in the bananaOS class? specifically when using read8 and write8 (which are memory functions)
+
+*/
+
 void BananaOS::dataLoad(){
     // get data size from 0x81f0
-    uint32_t dataSize = ReadBigEndianInt32(0x81f0);
+    uint32_t dataSize = bananaMEM.ReadBigEndianInt32(0x81f0);
     // get where to store data in ram from 0x81ec
-    uint32_t ramAddress = ReadBigEndianInt32(0x81ec);
+    uint32_t ramAddress = bananaMEM.ReadBigEndianInt32(0x81ec);
     // read data from address 0x81e4
-    uint32_t dataAddress = ReadBigEndianInt32(0x81e8);
+    uint32_t dataAddress = bananaMEM.ReadBigEndianInt32(0x81e8);
     for (uint32_t i = 0; i < dataSize; i++){
-        uint8_t data = read8(dataAddress);
+        uint8_t data = bananaMEM.read8(dataAddress);
         // std::cout << data << std::endl;
-        write8(ramAddress, data);
+        bananaMEM.write8(ramAddress, data);
         ramAddress++;
         dataAddress++;
     }
@@ -53,9 +57,9 @@ void BananaOS::dataLoad(){
 // setup()
 
 void BananaOS::setup(){
-    programCounter = 0xfffc;
-    jumpAndLink(0, 0, 0x2078); //skipping 81e0 bits
-    programCounter = ReadBigEndianInt32(programCounter);
+    bananaCPU.programCounter = 0xfffc;
+    bananaCPU.jumpAndLink(0, 0, 0x2078); //skipping 81e0 bits
+    bananaCPU.programCounter = bananaMEM.ReadBigEndianInt32(bananaCPU.programCounter);
     while (programCounter > 0x8000){
         doInstruction();
         if (programCounter == 0){
@@ -130,3 +134,5 @@ void BananaOS::doInstruction(){
     }
     
 }
+
+

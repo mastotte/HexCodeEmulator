@@ -8,11 +8,14 @@
 #include <functional>
 #include <memory>
 #include <unordered_map>
+#include "cpu.h"
+#include "memory.h"
 
 
 class BananaOS {
 private:
-    
+    CPU bananaCPU;
+    MEMORY bananaMEM;
 
 public:
     void dataLoad();
