@@ -49,23 +49,7 @@ public:
     void shiftLeftLogical(int reg_a, int reg_b, int reg_c, int shift_value);
     void shiftRightLogical(int reg_a, int reg_b, int reg_c, int shift_value);
     void setLessThan(int reg_a, int reg_b, int reg_c, int shift_value);
-
-    uint8_t read8(uint32_t address);
-    uint16_t read16(uint32_t address);
-
-    void write8(uint32_t address, uint8_t data);
-    void write16(uint32_t address, uint16_t data);
-
-    void dataLoad();
-
-    void setup();
-
-    void loop();
-
-    void doInstruction();
-
-
-        
+  
     // enums and unordered maps for tables
 
     enum Opcode {
