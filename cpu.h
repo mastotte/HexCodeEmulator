@@ -2,6 +2,7 @@
 #define CPU_H
 
 #include <cstdint>
+#include "memory.h"
 #include <fstream>
 #include <iostream>
 #include <functional>
@@ -16,38 +17,37 @@ public:
 
     uint16_t programCounter;
     uint32_t registers[32];
-    std::unique_ptr<char[]> memory;
     CPU();
 
 
-    std::unordered_map<int, std::function<void(CPU&, int, int, int, int)>> ROptable;
-    std::unordered_map<int, std::function<void(CPU&, int, int, int)>> IOptable;
+    std::unordered_map<int, std::function<void(CPU&, int, int, int, int, MEMORY)>> ROptable;
+    std::unordered_map<int, std::function<void(CPU&, int, int, int, MEMORY)>> IOptable;
 
 
 
-    void branchOnEqual(int reg_a, int reg_b, int immediate);
-    void loadWord(int reg_a, int reg_b, int immediate);
-    void loadByteUnsigned(int reg_a, int reg_b, int immediate);
-    void jump(int reg_a, int reg_b, int immediate);
+    void branchOnEqual(int reg_a, int reg_b, int immediate, MEMORY memory);
+    void loadWord(int reg_a, int reg_b, int immediate, MEMORY memory);
+    void loadByteUnsigned(int reg_a, int reg_b, int immediate, MEMORY memory);
+    void jump(int reg_a, int reg_b, int immediate, MEMORY memory);
 
-    void storeWord(int reg_a, int reg_b, int immediate);
-    void storeByte(int reg_a, int reg_b, int immediate);
-    void orImmediate(int reg_a, int reg_b, int immediate);
-    void branchOnNotEqual(int reg_a, int reg_b, int immediate);
+    void storeWord(int reg_a, int reg_b, int immediate, MEMORY memory);
+    void storeByte(int reg_a, int reg_b, int immediate, MEMORY memory);
+    void orImmediate(int reg_a, int reg_b, int immediate, MEMORY memory);
+    void branchOnNotEqual(int reg_a, int reg_b, int immediate, MEMORY memory);
 
-    void jumpAndLink(int reg_a, int reg_b, int immediate);
-    void subtract(int reg_a, int reg_b, int reg_c, int shift_value);
-    void or_Op(int reg_a, int reg_b, int reg_c, int shift_value);
-    void nor(int reg_a, int reg_b, int reg_c, int shift_value);
+    void jumpAndLink(int reg_a, int reg_b, int immediate, MEMORY memory);
+    void subtract(int reg_a, int reg_b, int reg_c, int shift_value, MEMORY memory);
+    void or_Op(int reg_a, int reg_b, int reg_c, int shift_value, MEMORY memory);
+    void nor(int reg_a, int reg_b, int reg_c, int shift_value, MEMORY memory);
 
-    void add(int reg_a, int reg_b, int reg_c, int shift_value);
-    void shiftRightArithmetic(int reg_a, int reg_b, int reg_c, int shift_value);
-    void bitwise_and(int reg_a, int reg_b, int reg_c, int shift_value);
-    void jumpRegister(int reg_a, int reg_b, int reg_c, int shift_value);
+    void add(int reg_a, int reg_b, int reg_c, int shift_value, MEMORY memory);
+    void shiftRightArithmetic(int reg_a, int reg_b, int reg_c, int shift_value, MEMORY memory);
+    void bitwise_and(int reg_a, int reg_b, int reg_c, int shift_value, MEMORY memory);
+    void jumpRegister(int reg_a, int reg_b, int reg_c, int shift_value, MEMORY memory);
 
-    void shiftLeftLogical(int reg_a, int reg_b, int reg_c, int shift_value);
-    void shiftRightLogical(int reg_a, int reg_b, int reg_c, int shift_value);
-    void setLessThan(int reg_a, int reg_b, int reg_c, int shift_value);
+    void shiftLeftLogical(int reg_a, int reg_b, int reg_c, int shift_value, MEMORY memory);
+    void shiftRightLogical(int reg_a, int reg_b, int reg_c, int shift_value, MEMORY memory);
+    void setLessThan(int reg_a, int reg_b, int reg_c, int shift_value, MEMORY memory);
   
     // enums and unordered maps for tables
 

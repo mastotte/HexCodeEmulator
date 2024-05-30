@@ -4,6 +4,9 @@
 // read and write functions
 #include "memory.h"
 
+
+
+
 uint16_t MEMORY::read16(uint32_t address){
     return (memory[address] << 8) | memory[address + 1];
 }
@@ -54,7 +57,7 @@ void MEMORY::write16(uint32_t address, uint16_t data){
 
 
 // File analyzer functions changed into cpu versions
-void MEMORY::FileAnalyzerFile(const std::string& filename){
+void MEMORY::fileReader(const std::string& filename){
     // Open the file
     std::ifstream file(filename, std::ios::binary | std::ios::ate);
 
@@ -63,28 +66,19 @@ void MEMORY::FileAnalyzerFile(const std::string& filename){
         std::cerr << "Error opening file: " << filename << std::endl;
         return;
     }
-/*
-Note the .slug file size is ALWAYS 0x8000 bytes in size per Ben's email. 
-We also don't need to seek to the beginning.
-*/
-
-    
-    // Allocate memory to store the contents of the file
-    // std::unique_ptr<char[]> contents;
-    memory = std::make_unique<char[]>(0x8000);
-    
     // stores value (displays differently based on computer), 1 byte in each index) actually reading in 4 at a time (the actual instruction)
     // Read the contents of the file into the allocated memory
-    file.read((memory.get() + 0x8000), 0x8000);
+    file.read((memory + 0x8000), 0x8000);
     // Close the file
     file.close();
 }
 
-uint32_t MEMORY::ReadBigEndianInt32(const size_t& addr) const {
+uint32_t MEMORY::readAddress(const size_t& addr) const {
   uint32_t out = 0;
   for (int i = 0; i < 4; i++) {
     out <<= 8;
     out |= (uint8_t)memory[addr + i];
+    std::cout << out << std::endl;
   }
   return out;
 }

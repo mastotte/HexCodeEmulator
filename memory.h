@@ -14,12 +14,17 @@
 
 class MEMORY {
 private:
-    
+    char* memory = new char[0x16000];
 
 public:
+    MEMORY() {
+    }
+    MEMORY(const MEMORY& other) {
+        memory = other.memory;
+    }
 
-    void FileAnalyzerFile(const std::string& filename);
-    uint32_t ReadBigEndianInt32(const size_t& addr) const;
+    void fileReader(const std::string& filename);
+    uint32_t readAddress(const size_t& addr) const;
 
     uint8_t read8(uint32_t address);
     uint16_t read16(uint32_t address);

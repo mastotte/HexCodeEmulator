@@ -14,10 +14,20 @@
 
 class BananaOS {
 private:
-    CPU bananaCPU;
-    MEMORY bananaMEM;
+    CPU* bananaCPU;
+    MEMORY *bananaMEM;
+    char* filename;
 
 public:
+    BananaOS(){
+        MEMORY mem = MEMORY();
+        bananaMEM = &mem;
+        CPU cpu = CPU();
+        bananaCPU = &cpu;
+    }
+
+    void openFile(char * name);
+
     void dataLoad();
 
     void setup();
@@ -26,7 +36,10 @@ public:
 
     void doInstruction();
 
+    void registerSet(int regNum, int value);
+
 };
 
 
 #endif
+

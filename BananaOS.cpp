@@ -37,17 +37,19 @@ input: tests io (a/b, up/down, left/right, select/start, stdin)
 
 */
 
+
+
 void BananaOS::dataLoad(){
     // get data size from 0x81f0
-    uint32_t dataSize = bananaMEM.ReadBigEndianInt32(0x81f0);
+    uint32_t dataSize = bananaMEM->readAddress(0x81f0);
     // get where to store data in ram from 0x81ec
-    uint32_t ramAddress = bananaMEM.ReadBigEndianInt32(0x81ec);
+    uint32_t ramAddress = bananaMEM->readAddress(0x81ec);
     // read data from address 0x81e4
-    uint32_t dataAddress = bananaMEM.ReadBigEndianInt32(0x81e8);
+    uint32_t dataAddress = bananaMEM->readAddress(0x81e8);
     for (uint32_t i = 0; i < dataSize; i++){
-        uint8_t data = bananaMEM.read8(dataAddress);
+        uint8_t data = bananaMEM->read8(dataAddress);
         // std::cout << data << std::endl;
-        bananaMEM.write8(ramAddress, data);
+        bananaMEM->write8(ramAddress, data);
         ramAddress++;
         dataAddress++;
     }
@@ -57,12 +59,15 @@ void BananaOS::dataLoad(){
 // setup()
 
 void BananaOS::setup(){
-    bananaCPU.programCounter = 0xfffc;
-    bananaCPU.jumpAndLink(0, 0, 0x2078); //skipping 81e0 bits
-    bananaCPU.programCounter = bananaMEM.ReadBigEndianInt32(bananaCPU.programCounter);
-    while (programCounter > 0x8000){
+    bananaCPU->programCounter = 0xfffc;
+    std::cout << bananaCPU->programCounter << std::endl;
+    bananaCPU->jumpAndLink(0, 0, 0x2078, *bananaMEM); //skipping 81e0 bits
+    std::cout << bananaCPU->programCounter << std::endl;
+    bananaCPU->programCounter = bananaMEM->readAddress(bananaCPU->programCounter);
+    std::cout << bananaCPU->programCounter << std::endl;
+    while (bananaCPU->programCounter > 0x8000){
         doInstruction();
-        if (programCounter == 0){
+        if (bananaCPU->programCounter == 0){
             break;
         }
     }
@@ -75,12 +80,12 @@ void BananaOS::loop(){
     
     
     // std::cout << programCounter << std::endl;  
-    programCounter = 0xfffc;
-    jumpAndLink(0, 0, 0x2079);
-    uint32_t loopAddress = ReadBigEndianInt32(programCounter);
+    bananaCPU->programCounter = 0xfffc;
+    bananaCPU->jumpAndLink(0, 0, 0x2079, *bananaMEM);
+    uint32_t loopAddress = bananaMEM->readAddress(bananaCPU->programCounter);
     while(1){
-        programCounter = loopAddress;
-        while (programCounter != 0){
+        bananaCPU->programCounter = loopAddress;
+        while (bananaCPU->programCounter != 0){
             doInstruction();
         }
     }
@@ -92,19 +97,19 @@ void BananaOS::loop(){
 void BananaOS::doInstruction(){
     //store instructions in register[12]
     // loadWord(0, 12, programCounter);
-    uint32_t instruction = ReadBigEndianInt32(programCounter);
-    programCounter += 4;
+    uint32_t instruction = bananaMEM->readAddress(bananaCPU->programCounter);
+    bananaCPU->programCounter += 4;
 
     uint32_t opcode = instruction >> 26;
     // std::cout << "opcode: " << opcode << std::endl;
     //check if the opcode is a value function
-    if (IOptable.find(opcode) != IOptable.end()){
+    if (bananaCPU->IOptable.find(opcode) != bananaCPU->IOptable.end()){
         uint32_t reg_a = instruction << 6;
         reg_a = reg_a >> 27;
         uint32_t reg_b = instruction << 11;
         reg_b = reg_b >> 27;
         // if (registers[11] == R_TYPE){
-        if (opcode == R_TYPE){
+        if (opcode == bananaCPU->R_TYPE){
             // check if function code is valid
 
             uint32_t function = instruction << 26;
@@ -113,7 +118,7 @@ void BananaOS::doInstruction(){
             // std::cout << "function: " << function << std::endl;
 
 
-            if (ROptable.find(function) != ROptable.end()){
+            if (bananaCPU->ROptable.find(function) != bananaCPU->ROptable.end()){
             
                 uint32_t reg_c = instruction << 16;
                 reg_c = reg_c >> 27;
@@ -121,18 +126,25 @@ void BananaOS::doInstruction(){
                 uint32_t shift_value = instruction << 21;
                 shift_value = shift_value >> 27;
                 
-                (ROptable[function])(*this, reg_a, reg_b, reg_c, shift_value);
+                (bananaCPU->ROptable[function])(*bananaCPU, reg_a, reg_b, reg_c, shift_value, *bananaMEM);
             }
         }
         else {
 
             uint32_t immediate = instruction << 16;
             immediate = immediate >> 16;
-            (IOptable[opcode])(*this, reg_a, reg_b, immediate);
+            (bananaCPU->IOptable[opcode])(*bananaCPU, reg_a, reg_b, immediate, *bananaMEM);
         }
         
     }
-    
+}
+
+void BananaOS::registerSet(int regNum, int value){
+    bananaCPU->registers[regNum] = value;
 }
 
 
+void BananaOS::openFile(char * name){
+    filename = name;
+    bananaMEM->fileReader(filename);
+}
