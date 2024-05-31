@@ -1,27 +1,18 @@
-// Ideally, you should have a class that acts like the OS and runs the reset sequence, as well as a class that is in charge of handling the memory.
-
-
-
-// Ideally, you should have a class that acts like the OS and runs the reset sequence, as well as a class that is in charge of handling the memory.
 #ifndef MEMORY_H
 #define MEMORY_H
+
 #include <cstdint>
 #include <fstream>
 #include <iostream>
-#include <functional>
-#include <memory>
-#include <unordered_map>
+#include <vector>
 
 class MEMORY {
 private:
-    char* memory = new char[0x16000];
+    std::vector<char> memory;
 
 public:
-    MEMORY() {
-    }
-    MEMORY(const MEMORY& other) {
-        memory = other.memory;
-    }
+    MEMORY();
+    MEMORY(const MEMORY& other);
 
     void fileReader(const std::string& filename);
     uint32_t readAddress(const size_t& addr) const;
@@ -31,8 +22,7 @@ public:
 
     void write8(uint32_t address, uint8_t data);
     void write16(uint32_t address, uint16_t data);
-
 };
 
+#endif // MEMORY_H
 
-#endif

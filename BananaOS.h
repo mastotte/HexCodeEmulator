@@ -1,4 +1,3 @@
-// Ideally, you should have a class that acts like the OS and runs the reset sequence, as well as a class that is in charge of handling the memory.
 #ifndef BananaOS_H
 #define BananaOS_H
 
@@ -11,22 +10,16 @@
 #include "cpu.h"
 #include "memory.h"
 
-
 class BananaOS {
 private:
-    CPU* bananaCPU;
-    MEMORY *bananaMEM;
-    char* filename;
+    std::unique_ptr<CPU> bananaCPU;
+    std::unique_ptr<MEMORY> bananaMEM;
+    std::string filename;
 
 public:
-    BananaOS(){
-        MEMORY mem = MEMORY();
-        bananaMEM = &mem;
-        CPU cpu = CPU();
-        bananaCPU = &cpu;
-    }
+    BananaOS();
 
-    void openFile(char * name);
+    void openFile(const std::string& name);
 
     void dataLoad();
 
@@ -37,9 +30,6 @@ public:
     void doInstruction();
 
     void registerSet(int regNum, int value);
-
 };
 
-
-#endif
-
+#endif // BananaOS_H

@@ -1,84 +1,78 @@
-// Ideally, you should have a class that acts like the OS and runs the reset sequence, as well as a class that is in charge of handling the memory.
-
-
-// read and write functions
 #include "memory.h"
 
-
-
-
-uint16_t MEMORY::read16(uint32_t address){
-    return (memory[address] << 8) | memory[address + 1];
+MEMORY::MEMORY() : memory(0x16000, 0) {
 }
 
-uint8_t MEMORY::read8(uint32_t address){
-    
-    char c;
-    if (address == 0x7100){
-        std::cin >> c; 
-        return c;
-    }
-    else{
-        return memory[address];
-    }
-    
+MEMORY::MEMORY(const MEMORY& other) : memory(other.memory) {
 }
 
-
-void MEMORY::write8(uint32_t address, uint8_t data){
-    memory[address] = data;
-    if (address == 0x7110) {
-        std::cout << data;
-    }
-    else if (address == 0x7120) {
-        std::cerr << data;
-    }
-    else if (address == 0x7200) {
-        exit(EXIT_SUCCESS);
-        // std::cout << data;
-        
-    }
-}
-
-void MEMORY::write16(uint32_t address, uint16_t data){
-    memory[address] = data >> 8;
-    memory[address + 1] = data; 
-    if (address == 0x7110) {
-        std::cout << data;
-    }
-    else if (address == 0x7120) {
-        std::cerr << data;
-    }
-    else if (address == 0x7200) {
-        exit(EXIT_SUCCESS);
-        // std::cout << data;
-    }
-}
-
-
-// File analyzer functions changed into cpu versions
-void MEMORY::fileReader(const std::string& filename){
-    // Open the file
+void MEMORY::fileReader(const std::string& filename) {
     std::ifstream file(filename, std::ios::binary | std::ios::ate);
 
-    // Check if file is opened successfully
     if (!file.is_open()) {
         std::cerr << "Error opening file: " << filename << std::endl;
         return;
     }
-    // stores value (displays differently based on computer), 1 byte in each index) actually reading in 4 at a time (the actual instruction)
-    // Read the contents of the file into the allocated memory
-    file.read((memory + 0x8000), 0x8000);
-    // Close the file
+
+    std::streamsize size = file.tellg();
+    file.seekg(0, std::ios::beg);
+
+    if (size > 0x8000) {
+        std::cerr << "File too large to fit in memory." << std::endl;
+        file.close();
+        return;
+    }
+
+    if (!file.read(&memory[0x8000], size)) {
+        std::cerr << "Error reading file: " << filename << std::endl;
+    }
+
     file.close();
 }
 
 uint32_t MEMORY::readAddress(const size_t& addr) const {
-  uint32_t out = 0;
-  for (int i = 0; i < 4; i++) {
-    out <<= 8;
-    out |= (uint8_t)memory[addr + i];
-    std::cout << out << std::endl;
-  }
-  return out;
+    uint32_t out = 0;
+    for (int i = 0; i < 4; i++) {
+        out <<= 8;
+        //out |= static_cast<uint8_t>(memory[addr + i]);
+        out |= (uint8_t)memory[addr + i];
+    }
+    return out;
+}
+
+uint8_t MEMORY::read8(uint32_t address) {
+    if (address == 0x7100) {
+        char c;
+        std::cin >> c;
+        return static_cast<uint8_t>(c);
+    } else {
+        return static_cast<uint8_t>(memory[address]);
+    }
+}
+
+uint16_t MEMORY::read16(uint32_t address) {
+    return (memory[address] << 8) | memory[address + 1];
+}
+
+void MEMORY::write8(uint32_t address, uint8_t data) {
+    memory[address] = data;
+    if (address == 0x7110) {
+        std::cout << data;
+    } else if (address == 0x7120) {
+        std::cerr << data;
+    } else if (address == 0x7200) {
+        exit(EXIT_SUCCESS);
+    }
+}
+
+void MEMORY::write16(uint32_t address, uint16_t data) {
+    memory[address] = data >> 8;
+    memory[address + 1] = data;
+    if (address == 0x7110) {
+        std::cout << data;
+    } else if (address == 0x7120) {
+        std::cerr << data;
+    } else if (address == 0x7200) {
+        exit(EXIT_SUCCESS);
+    }
 }

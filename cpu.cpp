@@ -58,7 +58,6 @@ void CPU::storeByte(int reg_a, int reg_b, int immediate, MEMORY memory) {
 
     // // Store the lower 8 bits into memory at the specified address
     // memory[registers[reg_a] + immediate] = lower8Bits;
-
     memory.write8(registers[reg_a] + immediate, registers[reg_b]);
     // std::cout << "store" << std::endl;
 }
@@ -77,7 +76,6 @@ void CPU::branchOnNotEqual(int reg_a, int reg_b, int immediate, MEMORY memory) {
 }
 //--------------------- 2.1.9-2.2.3 (Josh) ---------------------
 void CPU::jumpAndLink(int reg_a, int reg_b, int immediate, MEMORY memory) {
-    std::cout << "JAL" << std::endl;
     registers[31] = programCounter + 4;
     programCounter -= 4;
     programCounter = 4 * immediate;
