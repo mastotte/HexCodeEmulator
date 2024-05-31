@@ -9,6 +9,7 @@
 #include <unordered_map>
 #include "cpu.h"
 #include "memory.h"
+#include "gpu.h"
 
 #define CONTROLLER_A_MASK ((uint8_t)0x80)
 #define CONTROLLER_B_MASK ((uint8_t)0x40)
@@ -27,11 +28,12 @@ class BananaOS {
 private:
     CPU bananaCPU;
     MEMORY bananaMEM;
+    GPU bananaGPU;
     std::string filename;
 
 public:
     BananaOS() 
-    : bananaMEM(), bananaCPU(bananaMEM){}
+    : bananaMEM(), bananaCPU(bananaMEM), bananaGPU(bananaMEM){}
 
     void openFile(const std::string& name);
 

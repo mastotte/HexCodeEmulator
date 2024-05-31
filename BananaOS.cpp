@@ -1,10 +1,5 @@
 #include "BananaOS.h"
 
-
-
-
-
-
 void BananaOS::openFile(const std::string& name) {
     filename = name;
     bananaMEM.fileReader(filename);
@@ -24,6 +19,7 @@ void BananaOS::dataLoad() {
 }
 
 void BananaOS::setup() {
+    bananaGPU.init();
     bananaCPU.programCounter = 0xfffc;
     bananaCPU.jumpAndLink(0, 0, 0x2078);
     bananaCPU.programCounter = bananaMEM.readAddress(bananaCPU.programCounter);
@@ -41,12 +37,14 @@ void BananaOS::loop() {
     // std::cout << bananaCPU.programCounter << std::endl;
     uint32_t loopAddress = bananaMEM.readAddress(bananaCPU.programCounter);
     // std::cout << loopAddress << std::endl;
-   
     while (true) {
         bananaCPU.programCounter = loopAddress;
         // std::cout << bananaCPU.programCounter << std::endl;
         while (bananaCPU.programCounter != 0) {
-            doInstruction();
+            
+            doInstruction(); //segfaulting
+            bananaGPU.decodeAndDisplay();
+
             int controllerInput = bananaMEM.read8(CONTROLLER_INPUT_MEMORY);
             bananaMEM.write8(CONTROLLER_INPUT_MEMORY, CharacterMaskMap[controllerInput]);
         }
@@ -54,13 +52,15 @@ void BananaOS::loop() {
 }
 
 void BananaOS::doInstruction(){
+    
     //store instructions in register[12]
     // loadWord(0, 12, programCounter);
     uint32_t instruction = bananaMEM.readAddress(bananaCPU.programCounter);
     bananaCPU.programCounter += 4;
     uint32_t opcode = instruction >> 26;
-    
-    // std::cout << "opcode: " << opcode << std::endl;
+    /*std::cout<<"instruction: "<<instruction<<std::endl;
+    std::cout<<"program counter: "<<bananaCPU.programCounter<<std::endl;
+    std::cout<<"opcode: "<<opcode<<std::endl;*/
     //check if the opcode is a value function
     if (bananaCPU.IOptable.find(opcode) != bananaCPU.IOptable.end()){
         uint32_t reg_a = instruction << 6;
@@ -98,6 +98,7 @@ void BananaOS::doInstruction(){
         }
         
     }
+    
 }
 void BananaOS::registerSet(int regNum, int value) {
     bananaCPU.registers[regNum] = value;
