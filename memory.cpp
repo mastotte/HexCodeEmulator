@@ -43,7 +43,8 @@ uint8_t MEMORY::read8(uint32_t address) {
     if (address == 0x7100) {
         char c;
         std::cin >> c;
-        return static_cast<uint8_t>(c);
+        memory[address] = static_cast<uint8_t>(c);
+        return memory[address];
     } else {
         return static_cast<uint8_t>(memory[address]);
     }
