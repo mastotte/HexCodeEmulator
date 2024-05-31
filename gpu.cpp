@@ -7,7 +7,7 @@ void GPU::init(){
     std::cout<<"check 2"<<std::endl;
     GPU::clearFrameBuffer();
     SDL_Init(SDL_INIT_VIDEO);
-    SDL_Window* window = SDL_CreateWindow("SDL Blank Window",SDL_WINDOWPOS_CENTERED,SDL_WINDOWPOS_CENTERED,SCREEN_WIDTH, SCREEN_HEIGHT,SDL_WINDOW_SHOWN);
+    SDL_Window* window = SDL_CreateWindow("SDL Blank Window",SDL_WINDOWPOS_CENTERED,SDL_WINDOWPOS_CENTERED,SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
     texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STATIC, SCREEN_WIDTH, SCREEN_HEIGHT);
     decodeAndDisplay();
@@ -29,25 +29,24 @@ void GPU::setPixel(int address, int value){ //value will be 1 or 0
 void GPU::decodeAndDisplay(){
     //add code here
 
+    SDL_GetWindowSize(window, &SCREEN_WIDTH, &SCREEN_HEIGHT);
+    SDL_DestroyTexture(texture);
+    texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STATIC, SCREEN_WIDTH, SCREEN_HEIGHT);
+
     for(int h = 0; h < SCREEN_HEIGHT; h++){
         for(int w = 0; w < SCREEN_WIDTH; w++){
             int pixel_address = getPixelAddress(w, h);
             int value = memory.read8(pixel_address);
-            //std::cout<<pixel_address<<std::endl;
-            //std::cout<<value;
-            setPixel(w + (h * 64), value);
-        }
-        
+            std::cout<<pixel_address<<std::endl;
+            setPixel(w + (h * SCREEN_WIDTH), value);
+        } 
     }
-    //std::cout<<"c1"<<std::endl;
+
     SDL_UpdateTexture(texture, nullptr, pixels, SCREEN_WIDTH * sizeof(Uint32));
-    //std::cout<<"c2"<<std::endl;
     SDL_RenderClear(renderer);
-    //std::cout<<"c3"<<std::endl;
     SDL_RenderCopy(renderer, texture, nullptr, nullptr);
-    //std::cout<<"c4"<<std::endl;
     SDL_RenderPresent(renderer);
-    //std::cout<<"c5"<<std::endl;
+
 };
 
 void GPU::clearFrameBuffer(){
