@@ -2,6 +2,9 @@
 
 
 
+
+
+
 void BananaOS::openFile(const std::string& name) {
     filename = name;
     bananaMEM.fileReader(filename);
@@ -38,11 +41,14 @@ void BananaOS::loop() {
     // std::cout << bananaCPU.programCounter << std::endl;
     uint32_t loopAddress = bananaMEM.readAddress(bananaCPU.programCounter);
     // std::cout << loopAddress << std::endl;
+   
     while (true) {
         bananaCPU.programCounter = loopAddress;
         // std::cout << bananaCPU.programCounter << std::endl;
         while (bananaCPU.programCounter != 0) {
             doInstruction();
+            int controllerInput = bananaMEM.read8(CONTROLLER_INPUT_MEMORY);
+            bananaMEM.write8(CONTROLLER_INPUT_MEMORY, CharacterMaskMap[controllerInput]);
         }
     }
 }
