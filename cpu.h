@@ -52,29 +52,30 @@ public:
 
 
 
-    void branchOnEqual(int reg_a, int reg_b, int immediate);
-    void loadWord(int reg_a, int reg_b, int immediate);
-    void loadByteUnsigned(int reg_a, int reg_b, int immediate);
-    void jump(int reg_a, int reg_b, int immediate);
+void branchOnEqual(const int reg_a, const int reg_b, const int immediate);
+void loadWord(const int reg_a, const int reg_b, const int immediate);
+void loadByteUnsigned(const int reg_a, const int reg_b, const int immediate);
+void jump(const int reg_a, const int reg_b, const int immediate);
 
-    void storeWord(int reg_a, int reg_b, int immediate);
-    void storeByte(int reg_a, int reg_b, int immediate);
-    void orImmediate(int reg_a, int reg_b, int immediate);
-    void branchOnNotEqual(int reg_a, int reg_b, int immediate);
+void storeWord(const int reg_a, const int reg_b, const int immediate);
+void storeByte(const int reg_a, const int reg_b, const int immediate);
+void orImmediate(const int reg_a, const int reg_b, const int immediate);
+void branchOnNotEqual(const int reg_a, const int reg_b, const int immediate);
 
-    void jumpAndLink(int reg_a, int reg_b, int immediate);
-    void subtract(int reg_a, int reg_b, int reg_c, int shift_value);
-    void or_Op(int reg_a, int reg_b, int reg_c, int shift_value);
-    void nor(int reg_a, int reg_b, int reg_c, int shift_value);
+void jumpAndLink(const int reg_a, const int reg_b, const int immediate);
+void subtract(const int reg_a, const int reg_b, const int reg_c, const int shift_value);
+void or_Op(const int reg_a, const int reg_b, const int reg_c, const int shift_value);
+void nor(const int reg_a, const int reg_b, const int reg_c, const int shift_value);
 
-    void add(int reg_a, int reg_b, int reg_c, int shift_value);
-    void shiftRightArithmetic(int reg_a, int reg_b, int reg_c, int shift_value);
-    void bitwise_and(int reg_a, int reg_b, int reg_c, int shift_value);
-    void jumpRegister(int reg_a, int reg_b, int reg_c, int shift_value);
+void add(const int reg_a, const int reg_b, const int reg_c, const int shift_value);
+void shiftRightArithmetic(const int reg_a, const int reg_b, const int reg_c, const int shift_value);
+void bitwise_and(const int reg_a, const int reg_b, const int reg_c, const int shift_value);
+void jumpRegister(const int reg_a, const int reg_b, const int reg_c, const int shift_value);
 
-    void shiftLeftLogical(int reg_a, int reg_b, int reg_c, int shift_value);
-    void shiftRightLogical(int reg_a, int reg_b, int reg_c, int shift_value);
-    void setLessThan(int reg_a, int reg_b, int reg_c, int shift_value);
+void shiftLeftLogical(const int reg_a, const int reg_b, const int reg_c, const int shift_value);
+void shiftRightLogical(const int reg_a, const int reg_b, const int reg_c, const int shift_value);
+void setLessThan(const int reg_a, const int reg_b, const int reg_c, const int shift_value);
+
   
     // enums and unordered maps for tables
 
