@@ -11,17 +11,6 @@
 #include "memory.h"
 #include "gpu.h"
 
-#define CONTROLLER_A_MASK ((uint8_t)0x80)
-#define CONTROLLER_B_MASK ((uint8_t)0x40)
-#define CONTROLLER_SELECT_MASK ((uint8_t)0x20)
-#define CONTROLLER_START_MASK ((uint8_t)0x10)
-#define CONTROLLER_UP_MASK ((uint8_t)0x08)
-#define CONTROLLER_DOWN_MASK ((uint8_t)0x04)
-#define CONTROLLER_LEFT_MASK ((uint8_t)0x02)
-#define CONTROLLER_RIGHT_MASK ((uint8_t)0x01)
-
-#define CONTROLLER_INPUT_MEMORY (0x7000)
-
 #define SLUG_ADDRESS_HEADER 0x8000
 #define DEBUG_STDIN_ADDRESS 0x7100
 #define DEBUG_STDOUT_ADDRESS 0x7110

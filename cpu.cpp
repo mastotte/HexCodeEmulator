@@ -126,13 +126,15 @@ void CPU::jumpRegister(const int reg_a, const int reg_b, const int reg_c, const 
 }
 //--------------------- 2.2.8-2.2.10 (Omid) ---------------------
 void CPU::shiftLeftLogical(const int reg_a, const int reg_b, const int reg_c, const int shift_value) {
-    registers[reg_c] = (unsigned)registers[reg_b] << shift_value;
+    // registers[reg_c] = (unsigned)registers[reg_b] << shift_value;
+    registers[reg_c] = registers[reg_b] << shift_value;
     //std::cout << "sll during reg a " << registers[reg_a] << " reg b " << registers[reg_b] << "reg c " << registers[reg_c] << std::endl;
     // s//td::cout << "sll regc: " << reg_c  << " shift value: " << shift_value << " reg_b: " << reg_b << std::endl;
 }
 
 void CPU::shiftRightLogical(const int reg_a, const int reg_b, const int reg_c, const int shift_value) {
-    registers[reg_c] = (unsigned)registers[reg_b] >> shift_value;
+    // registers[reg_c] = (unsigned)registers[reg_b] >> shift_value;
+    registers[reg_c] = registers[reg_b] >> shift_value;
     //std::cout << "srl" << std::endl;
 }
 

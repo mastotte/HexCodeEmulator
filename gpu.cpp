@@ -62,7 +62,7 @@ void GPU::handleInput() {
             exit(EXIT_SUCCESS);
         }
         if (event.type == SDL_KEYDOWN || event.type == SDL_KEYUP) {
-            uint8_t controllerInput = 0;
+            int8_t controllerInput = 0;
             switch (event.key.keysym.sym) {
                 case SDLK_UP:
                     controllerInput = CONTROLLER_UP_MASK;
@@ -77,6 +77,7 @@ void GPU::handleInput() {
                     controllerInput = CONTROLLER_RIGHT_MASK;
                     break;
                 case SDLK_a:
+                    std::cout << CONTROLLER_A_MASK << std::endl; 
                     controllerInput = CONTROLLER_A_MASK;
                     break;
                 case SDLK_b:
