@@ -4,8 +4,8 @@ project(TheBanana LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 
-# find_package(SDL2 REQUIRED)
-# include_directories(${SDL2_INCLUDE_DIRS})
+find_package(SDL2 REQUIRED)
+include_directories(${SDL2_INCLUDE_DIRS})
 
 # Define the target (executable)
 add_executable(TheBanana # Use the project name for consistency
@@ -13,7 +13,8 @@ add_executable(TheBanana # Use the project name for consistency
     BananaOS.cpp
     memory.cpp
     cpu.cpp
+    gpu.cpp
 )
 
 # Link SDL2 libraries to the executable
-# target_link_libraries(TheBanana ${SDL2_LIBRARIES}) 
+target_link_libraries(TheBanana ${SDL2_LIBRARIES}) 

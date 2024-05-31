@@ -1,14 +1,15 @@
 #include "BananaOS.h"
 
+
 void BananaOS::openFile(const std::string& name) {
     filename = name;
     bananaMEM.fileReader(filename);
 }
 
 void BananaOS::dataLoad() {
-    uint32_t dataSize = bananaMEM.readAddress(0x81f0);
-    uint32_t ramAddress = bananaMEM.readAddress(0x81ec);
-    uint32_t dataAddress = bananaMEM.readAddress(0x81e8);
+    uint32_t dataSize = bananaMEM.readAddress(DATA_SIZE);
+    uint32_t ramAddress = bananaMEM.readAddress(PROGRAM_DATA_ADDR_RAM);
+    uint32_t dataAddress = bananaMEM.readAddress(LOAD_DATA_ADDR_ROM);
 
     for (uint32_t i = 0; i < dataSize; i++) {
         uint8_t data = bananaMEM.read8(dataAddress);
@@ -20,10 +21,10 @@ void BananaOS::dataLoad() {
 
 void BananaOS::setup() {
     bananaGPU.init();
-    bananaCPU.programCounter = 0xfffc;
+    bananaCPU.programCounter = PC_RESET;
     bananaCPU.jumpAndLink(0, 0, 0x2078);
     bananaCPU.programCounter = bananaMEM.readAddress(bananaCPU.programCounter);
-    while (bananaCPU.programCounter > 0x8000) {
+    while (bananaCPU.programCounter > SLUG_ADDRESS_HEADER) {
         doInstruction();
         if (bananaCPU.programCounter == 0) {
             break;
@@ -32,7 +33,7 @@ void BananaOS::setup() {
 }
 
 void BananaOS::loop() {
-    bananaCPU.programCounter = 0xfffc;
+    bananaCPU.programCounter = PC_RESET;
     bananaCPU.jumpAndLink(0, 0, 0x2079);
     // std::cout << bananaCPU.programCounter << std::endl;
     uint32_t loopAddress = bananaMEM.readAddress(bananaCPU.programCounter);
