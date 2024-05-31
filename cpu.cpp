@@ -142,39 +142,6 @@ void CPU::setLessThan(int reg_a, int reg_b, int reg_c, int shift_value) {
     // s//td::cout << "slt regc: " << reg_c  << " reg_a: " << reg_a << " reg_b: " << reg_b << std::endl;
 }
 
-
-// read and write functions
-
-// CPU::CPU() {
-//     // Initialize ROptable
-
-//     ROptable = { 
-//         {subtractCode, &CPU::subtract},
-//             {or_OpCode, &CPU::or_Op},
-//             {norCode, &CPU::nor},
-//             {addCode, &CPU::add},
-//             {shiftRightArithmeticCode, &CPU::shiftRightArithmetic},
-//             {bitwise_andCode, &CPU::bitwise_and},
-//             {jumpRegisterCode, &CPU::jumpRegister},
-//             {shiftLeftLogicalCode, &CPU::shiftLeftLogical},
-//             {shiftRightLogicalCode, &CPU::shiftRightLogical},
-//             {setLessThanCode, &CPU::setLessThan}
-//         };
-//     // Initialize IOptable
-
-//         IOptable = {
-//             {branchOnEqualCode, &CPU::branchOnEqual},
-//             {loadWordCode, &CPU::loadWord},
-//             {loadByteUnsignedCode, &CPU::loadByteUnsigned},
-//             {jumpCode, &CPU::jump},
-//             {storeWordCode, &CPU::storeWord},
-//             {storeByteCode, &CPU::storeByte},
-//             {orImmediateCode, &CPU::orImmediate},
-//             {branchOnNotEqualCode, &CPU::branchOnNotEqual},
-//             {jumpAndLinkCode, &CPU::jumpAndLink},
-//             {R_TYPE, &CPU::jumpAndLink} 
-//         };
-// }
 // seperate things out of CPU class (inheritance)
 // memory class 
 // OS class contains cpu object and memory object
