@@ -16,7 +16,7 @@ private:
 public:
 
     uint16_t programCounter;
-    uint32_t registers[32];
+    int32_t registers[32];
     CPU(MEMORY& memory): memory(memory){
         ROptable = { 
         {subtractCode, &CPU::subtract},

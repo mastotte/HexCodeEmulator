@@ -47,8 +47,8 @@ void BananaOS::loop() {
             bananaGPU.handleInput();
             bananaGPU.decodeAndDisplay();
 
-            int controllerInput = bananaMEM.read8(CONTROLLER_INPUT_MEMORY);
-            bananaMEM.write8(CONTROLLER_INPUT_MEMORY, CharacterMaskMap[controllerInput]);
+            // int controllerInput = bananaMEM.read8(CONTROLLER_INPUT_MEMORY);
+            // bananaMEM.write8(CONTROLLER_INPUT_MEMORY, CharacterMaskMap[controllerInput]);
         }
     }
 }
