@@ -3,8 +3,8 @@
 MEMORY::MEMORY() : memory(0x16000, 0) {
 }
 
-MEMORY::MEMORY(const MEMORY& other) : memory(other.memory) {
-}
+// MEMORY::MEMORY(const MEMORY& other) : memory(other.memory) {
+// }
 
 void MEMORY::fileReader(const std::string& filename) {
     std::ifstream file(filename, std::ios::binary | std::ios::ate);
@@ -26,7 +26,6 @@ void MEMORY::fileReader(const std::string& filename) {
     if (!file.read(&memory[0x8000], size)) {
         std::cerr << "Error reading file: " << filename << std::endl;
     }
-
     file.close();
 }
 

@@ -12,7 +12,7 @@ private:
 
 public:
     MEMORY();
-    MEMORY(const MEMORY& other);
+    // MEMORY(const MEMORY& other);
 
     void fileReader(const std::string& filename);
     uint32_t readAddress(const size_t& addr) const;

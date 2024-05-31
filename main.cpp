@@ -10,10 +10,11 @@
 #include "BananaOS.h"
 
 int main(int argc, char* argv[]){
-
-    BananaOS mainOS = BananaOS();
+    MEMORY BanMEM = MEMORY();
+    CPU BanCPU = CPU();
+    BananaOS mainOS = BananaOS(BanCPU, BanMEM);
     char* filename = argv[1];
-    
+
     mainOS.openFile(filename);
     // get data size from 0x81f0
     // get where to store data in ram from 0x81ec
