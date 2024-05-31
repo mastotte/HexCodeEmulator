@@ -7,27 +7,25 @@
 #include <any>
 
 #include "FileAnalyzerFile.h"
-#include "cpu.h"
+#include "BananaOS.h"
 
 int main(int argc, char* argv[]){
 
-    // get file from argument 
-    CPU cpu;
+    BananaOS mainOS = BananaOS();
     char* filename = argv[1];
-    cpu.FileAnalyzerFile(filename);
-
-
+    
+    mainOS.openFile(filename);
     // get data size from 0x81f0
     // get where to store data in ram from 0x81ec
     // read data from address 0x81e4
-    cpu.dataLoad();
+    mainOS.dataLoad();
 
     // initialize stack pointer to 0x6000
-    cpu.registers[29] = 0x6000;
-    
-    cpu.setup();
+    mainOS.registerSet(29, 0x6000);
 
-    cpu.loop();
+    mainOS.setup();
+
+    mainOS.loop();
 // setup
 // check to see if the program counter reaches 0, if it reaches 0 breakout
 // loop
