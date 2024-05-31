@@ -1,6 +1,8 @@
 {
     "C_Cpp.default.compilerPath": "c:\\MinGW\\bin\\c++.exe",
     "files.associations": {
-        "unordered_map": "cpp"
+        "unordered_map": "cpp",
+        "iosfwd": "cpp",
+        "iostream": "cpp"
     }
 }
