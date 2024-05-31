@@ -43,6 +43,7 @@ void BananaOS::loop() {
         while (bananaCPU.programCounter != 0) {
             
             doInstruction(); //segfaulting
+            bananaGPU.handleInput();
             bananaGPU.decodeAndDisplay();
 
             int controllerInput = bananaMEM.read8(CONTROLLER_INPUT_MEMORY);
