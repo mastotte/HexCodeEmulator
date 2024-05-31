@@ -2,50 +2,62 @@
 #include "gpu.h"
 #include "memory.h"
 #include <memory>
-
+const int BOX_SIZE = 64;
 void GPU::init(){
-    std::cout<<"check 2"<<std::endl;
     GPU::clearFrameBuffer();
+    
+    SDL_Window* window = nullptr;
+    SDL_Renderer* renderer = nullptr;
+
     SDL_Init(SDL_INIT_VIDEO);
-    SDL_Window* window = SDL_CreateWindow("SDL Blank Window",SDL_WINDOWPOS_CENTERED,SDL_WINDOWPOS_CENTERED,SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
-    SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-    texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STATIC, SCREEN_WIDTH, SCREEN_HEIGHT);
-    decodeAndDisplay();
+    
+    
+    
+}
+void GPU::quit(){
+    // Clean up
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
+    SDL_Quit();
 }
 
 int GPU::getPixelAddress(int width, int height){
-    //std::cout<<"Width: "<<width<<"  Height: "<<height<<std::endl;
+
     int pixel_index = width + (height * 64);
     int pixel_offset = 1 * pixel_index;
     return 0x6000 + pixel_offset;
-
 };
 
-void GPU::setPixel(int address, int value){ //value will be 1 or 0
-    //add code here
-    pixels[address] = value;
-}
+void GPU::setPixel(int x, int y, int color) {
+    
+    if (color == 0){
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); // Black
+    }else{
+        SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255); // White
+    }
+    SDL_RenderDrawPoint(renderer, x, y);
+
+    // Render present
+    SDL_RenderPresent(renderer);
+};
 
 void GPU::decodeAndDisplay(){
-    //add code here
+    std::cout<<" "<<std::endl;
+    window = SDL_CreateWindow("SDL Box", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
 
-    SDL_GetWindowSize(window, &SCREEN_WIDTH, &SCREEN_HEIGHT);
-    SDL_DestroyTexture(texture);
-    texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STATIC, SCREEN_WIDTH, SCREEN_HEIGHT);
-
+    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+    //add code here   
+    
+    // Render present
+    SDL_RenderPresent(renderer);
     for(int h = 0; h < SCREEN_HEIGHT; h++){
         for(int w = 0; w < SCREEN_WIDTH; w++){
             int pixel_address = getPixelAddress(w, h);
             int value = memory.read8(pixel_address);
-            std::cout<<pixel_address<<std::endl;
-            setPixel(w + (h * SCREEN_WIDTH), value);
+            setPixel(w, h, value);
         } 
     }
 
-    SDL_UpdateTexture(texture, nullptr, pixels, SCREEN_WIDTH * sizeof(Uint32));
-    SDL_RenderClear(renderer);
-    SDL_RenderCopy(renderer, texture, nullptr, nullptr);
-    SDL_RenderPresent(renderer);
 
 };
 
@@ -101,4 +113,38 @@ int main() {
     SDL_Quit();
     return 0;
 }
-*/
+void GPU::setPixel(SDL_Renderer *renderer, int x, int y, int color) {
+    if (color == 1) {
+        std::cout<<"white";
+        SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255); // White
+    } else {
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); // Black
+    }
+    SDL_RenderDrawPoint(renderer, x, y);
+}
+
+void GPU::decodeAndDisplay(){
+    //add code here
+
+    /*SDL_GetWindowSize(window, &SCREEN_WIDTH, &SCREEN_HEIGHT);
+    SDL_DestroyTexture(texture);
+    texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STATIC, SCREEN_WIDTH, SCREEN_HEIGHT);
+    //color = (color == 0) ? 1 : 0;
+    
+    for(int h = 0; h < SCREEN_HEIGHT; h++){
+        for(int w = 0; w < SCREEN_WIDTH; w++){
+            
+            std::cout<<pixel_address<<std::endl;
+            setPixel(renderer, w, h, 1);
+        } 
+    }
+
+    /*SDL_UpdateTexture(texture, nullptr, pixels, SCREEN_WIDTH * sizeof(Uint32));
+    SDL_RenderClear(renderer);
+    SDL_RenderCopy(renderer, texture, nullptr, nullptr);
+    SDL_RenderPresent(renderer);
+
+    
+
+
+};*/
