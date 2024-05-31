@@ -25,4 +25,3 @@ public:
 };
 
 #endif // MEMORY_H
-

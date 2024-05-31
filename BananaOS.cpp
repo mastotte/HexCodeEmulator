@@ -1,9 +1,6 @@
 #include "BananaOS.h"
 
-BananaOS::BananaOS(CPU& cpu, MEMORY& mem) 
-    : bananaCPU(cpu), bananaMEM(mem) // Initialize references in the initialization list
-{
-}
+
 
 void BananaOS::openFile(const std::string& name) {
     filename = name;
@@ -25,7 +22,7 @@ void BananaOS::dataLoad() {
 
 void BananaOS::setup() {
     bananaCPU.programCounter = 0xfffc;
-    bananaCPU.jumpAndLink(0, 0, 0x2078, bananaMEM);
+    bananaCPU.jumpAndLink(0, 0, 0x2078);
     bananaCPU.programCounter = bananaMEM.readAddress(bananaCPU.programCounter);
     while (bananaCPU.programCounter > 0x8000) {
         doInstruction();
@@ -37,13 +34,13 @@ void BananaOS::setup() {
 
 void BananaOS::loop() {
     bananaCPU.programCounter = 0xfffc;
-    bananaCPU.jumpAndLink(0, 0, 0x2079, bananaMEM);
-    std::cout << bananaCPU.programCounter << std::endl;
+    bananaCPU.jumpAndLink(0, 0, 0x2079);
+    // std::cout << bananaCPU.programCounter << std::endl;
     uint32_t loopAddress = bananaMEM.readAddress(bananaCPU.programCounter);
-    std::cout << loopAddress << std::endl;
+    // std::cout << loopAddress << std::endl;
     while (true) {
         bananaCPU.programCounter = loopAddress;
-        std::cout << bananaCPU.programCounter << std::endl;
+        // std::cout << bananaCPU.programCounter << std::endl;
         while (bananaCPU.programCounter != 0) {
             doInstruction();
         }
@@ -78,20 +75,20 @@ void BananaOS::doInstruction(){
             
                 uint32_t reg_c = instruction << 16;
                 reg_c = reg_c >> 27;
-                std::cout << "before reg a " << bananaCPU.registers[reg_a] << " reg b " << bananaCPU.registers[reg_b] << "reg c " << bananaCPU.registers[reg_c] << std::endl;
+                // std::cout << "before reg a " << bananaCPU.registers[reg_a] << " reg b " << bananaCPU.registers[reg_b] << "reg c " << bananaCPU.registers[reg_c] << std::endl;
                 uint32_t shift_value = instruction << 21;
                 shift_value = shift_value >> 27;
                 
-                (bananaCPU.ROptable[function])(bananaCPU, reg_a, reg_b, reg_c, shift_value, bananaMEM);
-                std::cout << "after reg a " << bananaCPU.registers[reg_a] << " reg b " << bananaCPU.registers[reg_b] << "reg c " << bananaCPU.registers[reg_c] << std::endl;
+                (bananaCPU.ROptable[function])(bananaCPU, reg_a, reg_b, reg_c, shift_value);
+                // std::cout << "after reg a " << bananaCPU.registers[reg_a] << " reg b " << bananaCPU.registers[reg_b] << "reg c " << bananaCPU.registers[reg_c] << std::endl;
             }
         }
         else {
-            std::cout << "before reg a " << bananaCPU.registers[reg_a] << " reg b " << bananaCPU.registers[reg_b] << std::endl;
+            // std::cout << "before reg a " << bananaCPU.registers[reg_a] << " reg b " << bananaCPU.registers[reg_b] << std::endl;
             uint32_t immediate = instruction << 16;
             immediate = immediate >> 16;
-            (bananaCPU.IOptable[opcode])(bananaCPU, reg_a, reg_b, immediate, bananaMEM);
-            std::cout << "after reg a " << bananaCPU.registers[reg_a] << " reg b " << bananaCPU.registers[reg_b] << std::endl;
+            (bananaCPU.IOptable[opcode])(bananaCPU, reg_a, reg_b, immediate);
+            // std::cout << "after reg a " << bananaCPU.registers[reg_a] << " reg b " << bananaCPU.registers[reg_b] << std::endl;
         }
         
     }
@@ -99,4 +96,3 @@ void BananaOS::doInstruction(){
 void BananaOS::registerSet(int regNum, int value) {
     bananaCPU.registers[regNum] = value;
 }
-

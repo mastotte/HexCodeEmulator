@@ -10,9 +10,9 @@
 #include "BananaOS.h"
 
 int main(int argc, char* argv[]){
-    MEMORY BanMEM = MEMORY();
-    CPU BanCPU = CPU();
-    BananaOS mainOS = BananaOS(BanCPU, BanMEM);
+    // MEMORY BanMEM = MEMORY();
+    // CPU BanCPU = CPU(&BanMEM);
+    BananaOS mainOS = BananaOS();
     char* filename = argv[1];
 
     mainOS.openFile(filename);

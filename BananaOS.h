@@ -12,12 +12,13 @@
 
 class BananaOS {
 private:
-    CPU& bananaCPU;
-    MEMORY& bananaMEM;
+    CPU bananaCPU;
+    MEMORY bananaMEM;
     std::string filename;
 
 public:
-    BananaOS(CPU& cpu, MEMORY& mem);
+    BananaOS() 
+    : bananaMEM(), bananaCPU(bananaMEM){}
 
     void openFile(const std::string& name);
 
