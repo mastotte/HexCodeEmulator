@@ -105,3 +105,17 @@ void BananaOS::doInstruction(){
 void BananaOS::registerSet(int regNum, int value) {
     bananaCPU.registers[regNum] = value;
 }
+
+void BananaOS::startup(char* filename){
+    openFile(filename);
+    // get data size from 0x81f0
+    // get where to store data in ram from 0x81ec
+    // read data from address 0x81e4
+    dataLoad();
+
+    registerSet(29, 0x6000);
+
+    setup();
+    
+    loop();
+}
