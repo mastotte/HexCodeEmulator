@@ -46,6 +46,8 @@ public:
 
     void registerSet(int regNum, int value);
 
+    void startup(char* filename);
+
     std::unordered_map<int, uint8_t> CharacterMaskMap = {
         {7, CONTROLLER_A_MASK},
         {6, CONTROLLER_B_MASK},
