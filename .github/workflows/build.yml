@@ -29,9 +29,6 @@ jobs:
       - name: Run hello_world tests
         working-directory: /home/runner/work/Final-Project/Final-Project/build_GH
         run: |
-          echo "Testing hello_world1.slug:"
           ./TheBanana ../hws/hello_world1.slug
-          echo "Testing hello_world2.slug:"
           ./TheBanana ../hws/hello_world2.slug
-          echo "Testing hello_world3.slug:"
           ./TheBanana ../hws/hello_world3.slug
