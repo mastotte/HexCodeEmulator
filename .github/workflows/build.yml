@@ -13,11 +13,11 @@ jobs:
           sudo apt update
           sudo apt install -y cmake libsdl2-dev
           cmake --version
+      - name: Create build_GH directory
+        run: mkdir -p /home/runner/work/Final-Project/Final-Project/build_GH
       - name: Build executable 
         working-directory: /home/runner/work/Final-Project/Final-Project/build_GH
         run: |
-          mkdir build_GH
-          cd build_GH
           cmake ..
           make
       - name: Run Executable
