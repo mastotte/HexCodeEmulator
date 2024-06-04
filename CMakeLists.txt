@@ -9,11 +9,11 @@ include_directories(${SDL2_INCLUDE_DIRS})
 
 # Define the target (executable)
 add_executable(TheBanana # Use the project name for consistency
-    main.cpp
-    BananaOS.cpp
-    memory.cpp
-    cpu.cpp
-    gpu.cpp
+    Source_Files/main.cpp
+    Source_Files/BananaOS.cpp
+    Source_Files/memory.cpp
+    Source_Files/cpu.cpp
+    Source_Files/gpu.cpp
 )
 
 # Link SDL2 libraries to the executable
