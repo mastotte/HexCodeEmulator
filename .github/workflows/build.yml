@@ -14,7 +14,13 @@ jobs:
           sudo apt install -y cmake libsdl2-dev
           cmake --version
       - name: Create build_GH directory
-        run: mkdir -p /home/runner/work/Final-Project/Final-Project/build_GH
+        run:
+          if mkdir -p /home/runner/work/Final-Project/Final-Project/build_GH; then
+            echo "Directory created successfully!"
+          else
+            echo "Error - Directory creation failed"
+            exit 1
+          fi
       - name: Build executable 
         working-directory: /home/runner/work/Final-Project/Final-Project/build_GH
         run: |
