@@ -11,7 +11,7 @@ jobs:
       - name: Install Tools
         run: |
           sudo apt update
-          sudo apt install -y cmake
+          sudo apt install -y cmake libsdl2-dev
           cmake --version
       - name: Build hello_world example
         run: |
@@ -19,4 +19,7 @@ jobs:
           cd build_GH
           cmake ..
           make
+      - name: Run Executable
+        run: |
+          cd build_GH
           ./TheBanana
