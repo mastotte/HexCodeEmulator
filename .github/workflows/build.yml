@@ -21,4 +21,5 @@ jobs:
           make
       - name: Run Executable
         run: |
+          cd build_GH
           ./TheBanana ../hws/hello_world1.slug
