@@ -30,3 +30,13 @@ jobs:
         working-directory: /home/runner/work/Final-Project/Final-Project/build_GH
         run: |
           ./TheBanana ../hws/hello_world1.slug
+
+      - name: Run Executable
+        working-directory: /home/runner/work/Final-Project/Final-Project/build_GH
+        run: |
+          ./TheBanana ../hws/hello_world2.slug
+
+      - name: Run Executable
+        working-directory: /home/runner/work/Final-Project/Final-Project/build_GH
+        run: |
+          ./TheBanana ../hws/hello_world3.slug
