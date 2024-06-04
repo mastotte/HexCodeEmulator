@@ -18,3 +18,13 @@ add_executable(TheBanana # Use the project name for consistency
 
 # Link SDL2 libraries to the executable
 target_link_libraries(TheBanana ${SDL2_LIBRARIES}) 
+
+# Custom target for code formatting verification
+add_custom_target(verify-format
+    COMMAND clang-format -output-replacements-xml -style=file
+    ${CMAKE_CURRENT_SOURCE_DIR}/Source_Files/*.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Source_Files/*.h
+    | grep -c '<replacement ' > /dev/null
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+    COMMENT "Checking code formatting..."
+)
