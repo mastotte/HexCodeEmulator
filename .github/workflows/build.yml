@@ -1,26 +1,3 @@
-Skip to content
-Navigation Menu
-CSE111Group9
-/
-Final-Project
-
-Type / to search
-
-Code
-Issues
-Pull requests
-1
-Actions
-Projects
-Security
-Insights
-Settings
-Build Linux
-Update build.yml #160
-Jobs
-Run details
-Workflow file for this run
-.github/workflows/build.yml at 80f50fe
 name: Build Linux
 on:
   push:
