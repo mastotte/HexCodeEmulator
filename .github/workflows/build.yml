@@ -22,4 +22,4 @@ jobs:
       - name: Run Executable
         run: |
           cd build_GH
-          ./TheBanana
+          ./TheBanana ..hws/hello_world1.slug
