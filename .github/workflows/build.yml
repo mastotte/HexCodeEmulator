@@ -1,3 +1,26 @@
+Skip to content
+Navigation Menu
+CSE111Group9
+/
+Final-Project
+
+Type / to search
+
+Code
+Issues
+Pull requests
+1
+Actions
+Projects
+Security
+Insights
+Settings
+Build Linux
+Update build.yml #160
+Jobs
+Run details
+Workflow file for this run
+.github/workflows/build.yml at 80f50fe
 name: Build Linux
 on:
   push:
@@ -26,17 +49,18 @@ jobs:
         run: |
           cmake ..
           make
-      - name: Run hello_world1 test
+      - name: Run Executable
         working-directory: /home/runner/work/Final-Project/Final-Project/build_GH
         run: |
           ./TheBanana ../hws/hello_world1.slug
+
       
-      - name: Run hello_world2 test
+      - name: Run hello_world2
         working-directory: /home/runner/work/Final-Project/Final-Project/build_GH
         run: |
           ./TheBanana ../hws/hello_world2.slug
       
-      - name: Run hello_world3 test
+      - name: Run hello_world3
         working-directory: /home/runner/work/Final-Project/Final-Project/build_GH
         run: |
           ./TheBanana ../hws/hello_world3.slug
