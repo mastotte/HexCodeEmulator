@@ -13,13 +13,14 @@ jobs:
           sudo apt update
           sudo apt install -y cmake libsdl2-dev
           cmake --version
-      - name: Build executable
+      - name: Build executable 
+        working-directory: ./build_GH
         run: |
           mkdir build_GH
           cd build_GH
           cmake ..
           make
       - name: Run Executable
+        working-directory: ./build_GH
         run: |
-          cd build_GH
           ./TheBanana ../hws/hello_world1.slug
