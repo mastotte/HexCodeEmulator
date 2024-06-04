@@ -15,6 +15,8 @@ jobs:
           cmake --version
       - name: Build hello_world example
         run: |
-          cd files
+          mkdir build_GH
+          cd build_GH
+          cmake ..
           make
-          ./main
+          ./TheBanana
