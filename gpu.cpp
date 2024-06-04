@@ -22,14 +22,14 @@ void GPU::quit(){
     SDL_Quit();
 };
 
-int GPU::getPixelAddress(int width, int height){
+int GPU::getPixelAddress(const int width, const int height){
 
-    int pixel_index = width + (height * 64);
-    int pixel_offset = 1 * pixel_index;
+    const int pixel_index = width + (height * 64);
+    const int pixel_offset = 1 * pixel_index;
     return 0x6000 + pixel_offset;
 };
 
-void GPU::drawBox(int size) {
+void GPU::drawBox(const int size) {
     // Set the color of the box based on the value of 'color'
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
     
@@ -40,7 +40,7 @@ void GPU::drawBox(int size) {
     SDL_RenderFillRect(renderer, &boxRect);
 }
 
-void GPU::eraseBox(int size) {
+void GPU::eraseBox(const int size) {
     // Set the color of the box based on the value of 'color'
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     
@@ -57,12 +57,12 @@ void GPU::resizeBox(bool larger){
         box_Size += 5;
         drawBox(box_Size);
     }else{
-        box_Size += 5;
+        box_Size -= 5;
         drawBox(box_Size);
     }
 }
 
-void GPU::moveBox(uint8_t direction){
+void GPU::moveBox(uint8_t const direction){
     eraseBox(box_Size);
     if(direction == CONTROLLER_RIGHT_MASK){
         if(box_Size + box_X < SCREEN_WIDTH){
@@ -87,7 +87,7 @@ void GPU::moveBox(uint8_t direction){
     }
 }
 
-void GPU::setPixel(int x, int y, int color) {
+void GPU::setPixel(const int x, const int y, const int color) {
     
     if (color == 0){
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); // Black
@@ -126,12 +126,14 @@ void GPU::clearFrameBuffer(){
 
 void GPU::handleInput() {
     SDL_Event event;
+    int16_t controllerInput = 0;
+
     while (SDL_PollEvent(&event)) {
         if (event.type == SDL_QUIT) {
             exit(EXIT_SUCCESS);
         }
         if (event.type == SDL_KEYDOWN || event.type == SDL_KEYUP) {
-            int8_t controllerInput = 0;
+            controllerInput = 0;
             switch (event.key.keysym.sym) {
                 case SDLK_UP:
                     controllerInput = CONTROLLER_UP_MASK;

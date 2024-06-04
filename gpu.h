@@ -23,8 +23,8 @@ private:
     SDL_Renderer* renderer;
     SDL_Texture* texture;
     int* pixels = new int[64*64];
-    int SCREEN_WIDTH = 64;
-    int SCREEN_HEIGHT = 64;
+    const int SCREEN_WIDTH = 64;
+    const int SCREEN_HEIGHT = 64;
     int box_X = 0;
     int box_Y = 0;
     int box_Size = 10;
@@ -38,17 +38,17 @@ public:
 
     void handleInput();
 
-    int getPixelAddress(int width, int height);
+    int getPixelAddress(const int width, const int height);
 
-    void drawBox(int size);
+    void drawBox(const int size);
 
-    void eraseBox(int size);
+    void eraseBox(const int size);
 
-    void moveBox(uint8_t direction);
+    void moveBox(uint8_t const direction);
 
     void resizeBox(bool larger);
 
-    void setPixel(int x, int y, int color); //value will be 1 or 0
+    void setPixel(const int x, const int y, const int color); //value will be 1 or 0
 
     void decodeAndDisplay();
 
