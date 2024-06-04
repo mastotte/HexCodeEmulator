@@ -18,7 +18,7 @@ jobs:
           if mkdir -p /home/runner/work/Final-Project/Final-Project/build_GH; then
             echo "Directory created successfully!"
           else
-            echo "Error - Directory creation failed"
+            echo "Error Directory creation failed"
             exit 1
           fi
       - name: Build executable 
