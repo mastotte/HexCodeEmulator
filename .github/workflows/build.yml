@@ -26,9 +26,14 @@ jobs:
         run: |
           cmake ..
           make
-      - name: Run hello_world tests
+      - name: Run hello_world1 test
         working-directory: /home/runner/work/Final-Project/Final-Project/build_GH
-        run: |
-          ./TheBanana ../hws/hello_world1.slug
-          ./TheBanana ../hws/hello_world2.slug
-          ./TheBanana ../hws/hello_world3.slug
+        run: ./TheBanana ../hws/hello_world1.slug
+      
+      - name: Run hello_world2 test
+        working-directory: /home/runner/work/Final-Project/Final-Project/build_GH
+        run: ./TheBanana ../hws/hello_world2.slug
+      
+      - name: Run hello_world3 test
+        working-directory: /home/runner/work/Final-Project/Final-Project/build_GH
+        run: ./TheBanana ../hws/hello_world3.slug
