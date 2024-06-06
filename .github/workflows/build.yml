@@ -27,6 +27,10 @@ jobs:
         run: |
           cmake ..
           make
+
+      - name: Convert line endings
+        run: dos2unix tests/run_test.sh
+        
       - name: Run hello_world1
         working-directory: /home/runner/work/Final-Project/Final-Project/tests
         run: |
