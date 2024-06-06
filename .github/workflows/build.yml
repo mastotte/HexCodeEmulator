@@ -29,7 +29,8 @@ jobs:
           make
 
       - name: Convert line endings
-        run: dos2unix tests/run_test.sh
+        run: |
+          sed -i 's/\r$//' tests/run_test.sh
         
       - name: Run hello_world1
         working-directory: /home/runner/work/Final-Project/Final-Project/tests
