@@ -6,10 +6,10 @@
 #include <unordered_map>
 #include <vector>
 
-#include "BananaOS.h"
+#include "Banana.h"
 
 int main(int argc, char* argv[]) {
-  BananaOS mainOS = BananaOS();
+  Banana mainOS = Banana();
   char* filename = argv[1];
   mainOS.startup(filename);
 }

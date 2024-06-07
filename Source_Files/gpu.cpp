@@ -94,8 +94,6 @@ void GPU::setPixel(const int x, const int y, const int color) {
   if (color == 0) {
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);  // Black
   } else {
-    // std::cout<<"Set Pixel Called: x = "<<x<<" y = "<<y<<" color =
-    // "<<color<<std::endl;
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);  // White
   }
   SDL_RenderDrawPoint(renderer, x, y);
@@ -105,12 +103,6 @@ void GPU::setPixel(const int x, const int y, const int color) {
 };
 
 void GPU::decodeAndDisplay() {
-  // std::cout<<" "<<std::endl;
-
-  // add code here
-
-  // Render present
-  // std::cout<<"Decode and Display Called"<<std::endl;
   SDL_RenderPresent(renderer);
   for (int h = 0; h < SCREEN_HEIGHT; h++) {
     // std::cout<<h<<std::endl;
@@ -175,44 +167,3 @@ void GPU::handleInput() {
     }
   }
 }
-/*
-int main() {
-    SDL_Init(SDL_INIT_VIDEO);
-    SDL_Quit();
-    return 0;
-}
-void GPU::setPixel(SDL_Renderer *renderer, int x, int y, int color) {
-    if (color == 1) {
-        std::cout<<"white";
-        SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255); // White
-    } else {
-        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); // Black
-    }
-    SDL_RenderDrawPoint(renderer, x, y);
-}
-
-void GPU::decodeAndDisplay(){
-    //add code here
-
-    /*SDL_GetWindowSize(window, &SCREEN_WIDTH, &SCREEN_HEIGHT);
-    SDL_DestroyTexture(texture);
-    texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888,
-SDL_TEXTUREACCESS_STATIC, SCREEN_WIDTH, SCREEN_HEIGHT);
-    //color = (color == 0) ? 1 : 0;
-
-    for(int h = 0; h < SCREEN_HEIGHT; h++){
-        for(int w = 0; w < SCREEN_WIDTH; w++){
-
-            std::cout<<pixel_address<<std::endl;
-            setPixel(renderer, w, h, 1);
-        }
-    }
-
-    /*SDL_UpdateTexture(texture, nullptr, pixels, SCREEN_WIDTH *
-sizeof(Uint32)); SDL_RenderClear(renderer); SDL_RenderCopy(renderer, texture,
-nullptr, nullptr); SDL_RenderPresent(renderer);
-
-
-
-
-};*/

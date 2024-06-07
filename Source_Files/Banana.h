@@ -1,5 +1,5 @@
-#ifndef BananaOS_H
-#define BananaOS_H
+#ifndef Banana_H
+#define Banana_H
 
 #include <cstdint>
 #include <fstream>
@@ -24,7 +24,7 @@
 #define ADDR_TO_LOOP 0x81e4
 #define ADDR_TO_SETUP 0x81e0
 
-class BananaOS {
+class Banana {
  private:
   CPU bananaCPU;
   MEMORY bananaMEM;
@@ -32,7 +32,7 @@ class BananaOS {
   std::string filename;
 
  public:
-  BananaOS() : bananaMEM(), bananaCPU(bananaMEM), bananaGPU(bananaMEM) {}
+  Banana() : bananaMEM(), bananaCPU(bananaMEM), bananaGPU(bananaMEM) {}
 
   void openFile(const std::string& name);
 
@@ -55,4 +55,4 @@ class BananaOS {
       {1, CONTROLLER_LEFT_MASK},   {0, CONTROLLER_RIGHT_MASK}};
 };
 
-#endif  // BananaOS_H
+#endif

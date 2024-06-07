@@ -24,7 +24,6 @@ class MEMORY {
 
  public:
   MEMORY();
-  // MEMORY(const MEMORY& other);
 
   void fileReader(const std::string& filename);
   uint32_t readAddress(const size_t& addr) const;
@@ -36,4 +35,4 @@ class MEMORY {
   void write16(uint32_t address, uint16_t data);
 };
 
-#endif  // MEMORY_H
+#endif

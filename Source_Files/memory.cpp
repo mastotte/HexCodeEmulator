@@ -2,9 +2,6 @@
 
 MEMORY::MEMORY() : memory(0x16000, 0) {}
 
-// MEMORY::MEMORY(const MEMORY& other) : memory(other.memory) {
-// }
-
 void MEMORY::fileReader(const std::string& filename) {
   std::ifstream file(filename, std::ios::binary | std::ios::ate);
 
