@@ -3,13 +3,14 @@
 
 #include <cstdint>
 #include <fstream>
-#include <iostream>
 #include <functional>
+#include <iostream>
 #include <memory>
 #include <unordered_map>
+
 #include "cpu.h"
-#include "memory.h"
 #include "gpu.h"
+#include "memory.h"
 
 #define SLUG_ADDRESS_HEADER 0x8000
 #define DEBUG_STDIN_ADDRESS 0x7100
@@ -24,40 +25,34 @@
 #define ADDR_TO_SETUP 0x81e0
 
 class BananaOS {
-private:
-    CPU bananaCPU;
-    MEMORY bananaMEM;
-    GPU bananaGPU;
-    std::string filename;
+ private:
+  CPU bananaCPU;
+  MEMORY bananaMEM;
+  GPU bananaGPU;
+  std::string filename;
 
-public:
-    BananaOS() 
-    : bananaMEM(), bananaCPU(bananaMEM), bananaGPU(bananaMEM){}
+ public:
+  BananaOS() : bananaMEM(), bananaCPU(bananaMEM), bananaGPU(bananaMEM) {}
 
-    void openFile(const std::string& name);
+  void openFile(const std::string& name);
 
-    void dataLoad();
+  void dataLoad();
 
-    void setup();
+  void setup();
 
-    void loop();
+  void loop();
 
-    void doInstruction();
+  void doInstruction();
 
-    void registerSet(int regNum, int value);
+  void registerSet(int regNum, int value);
 
-    void startup(char* filename);
+  void startup(char* filename);
 
-    std::unordered_map<int, uint8_t> CharacterMaskMap = {
-        {7, CONTROLLER_A_MASK},
-        {6, CONTROLLER_B_MASK},
-        {5, CONTROLLER_SELECT_MASK},
-        {4, CONTROLLER_START_MASK},
-        {3, CONTROLLER_UP_MASK},
-        {2, CONTROLLER_DOWN_MASK},
-        {1, CONTROLLER_LEFT_MASK},
-        {0, CONTROLLER_RIGHT_MASK}
-    };
+  std::unordered_map<int, uint8_t> CharacterMaskMap = {
+      {7, CONTROLLER_A_MASK},      {6, CONTROLLER_B_MASK},
+      {5, CONTROLLER_SELECT_MASK}, {4, CONTROLLER_START_MASK},
+      {3, CONTROLLER_UP_MASK},     {2, CONTROLLER_DOWN_MASK},
+      {1, CONTROLLER_LEFT_MASK},   {0, CONTROLLER_RIGHT_MASK}};
 };
 
-#endif // BananaOS_H
+#endif  // BananaOS_H

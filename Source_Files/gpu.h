@@ -1,9 +1,10 @@
 
 #pragma once
-#include <SDL2/SDL.h>   
-#include "memory.h"
+#include <SDL2/SDL.h>
+
 #include <memory>
 
+#include "memory.h"
 
 #define CONTROLLER_INPUT_MEMORY (0x7000)
 #define CONTROLLER_A_MASK ((uint8_t)0x80)
@@ -15,42 +16,44 @@
 #define CONTROLLER_LEFT_MASK ((uint8_t)0x02)
 #define CONTROLLER_RIGHT_MASK ((uint8_t)0x01)
 
-class GPU{
-private:
-    MEMORY& memory;
-    //framebuffer here?
-    SDL_Window* window;
-    SDL_Renderer* renderer;
-    SDL_Texture* texture;
-    int* pixels = new int[64*64];
-    const int SCREEN_WIDTH = 64;
-    const int SCREEN_HEIGHT = 64;
-    int box_X = 0;
-    int box_Y = 0;
-    int box_Size = 10;
-    int color = 0;
-public:
-    GPU(MEMORY& memory): memory(memory){}
+class GPU {
+ private:
+  MEMORY& memory;
+  // framebuffer here?
+  SDL_Window* window;
+  SDL_Renderer* renderer;
+  SDL_Texture* texture;
+  int* pixels = new int[64 * 64];
+  const int SCREEN_WIDTH = 64;
+  const int SCREEN_HEIGHT = 64;
+  int box_X = 0;
+  int box_Y = 0;
+  int box_Size = 10;
+  int color = 0;
 
-    void quit();
-    
-    void init();
+ public:
+  GPU(MEMORY& memory) : memory(memory) {}
 
-    void handleInput();
+  void quit();
 
-    int getPixelAddress(const int width, const int height);
+  void init();
 
-    void drawBox(const int size);
+  void handleInput();
 
-    void eraseBox(const int size);
+  int getPixelAddress(const int width, const int height);
 
-    void moveBox(uint8_t const direction);
+  void drawBox(const int size);
 
-    void resizeBox(bool larger);
+  void eraseBox(const int size);
 
-    void setPixel(const int x, const int y, const int color); //value will be 1 or 0
+  void moveBox(uint8_t const direction);
 
-    void decodeAndDisplay();
+  void resizeBox(bool larger);
 
-    void clearFrameBuffer();
+  void setPixel(const int x, const int y,
+                const int color);  // value will be 1 or 0
+
+  void decodeAndDisplay();
+
+  void clearFrameBuffer();
 };
