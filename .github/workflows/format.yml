@@ -17,6 +17,5 @@ jobs:
       - name: Run clang-format
         run: |
           find . -name '*.cpp' -o -name '*.h' | xargs clang-format -style=google -i
-      - name: Verify format
-        run: |
-          git diff --exit-code
+          make verify-format
+          ./verify-format
