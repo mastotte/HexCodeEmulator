@@ -13,6 +13,7 @@ jobs:
         run: |
           sudo apt update
           sudo apt install -y clang-format
+          sudo apt install -y cmake libsdl2-dev
           clang-format --version
       - name: Run clang-format
         run: |
