@@ -14,6 +14,16 @@ jobs:
           sudo apt update
           sudo apt install -y clang-format
           clang-format --version
+      - name: Run clang-format
+        run: |
+          find . -name '*.cpp' -o -name '*.h' | xargs clang-format -style=google -i 
+
       - name: Verify format
         run: |
-          make verify-format
+          if [[ $(git status --porcelain) ]]; then
+            echo "Code is not formatted properly. Please run clang-format.";
+            git diff; 
+            exit 1;
+          else
+            echo "Code is properly formatted."; 
+          fi
