@@ -17,5 +17,9 @@ jobs:
       - name: Run clang-format
         run: |
           find . -name '*.cpp' -o -name '*.h' | xargs clang-format -style=google -i
+
+      - name: Verifying
+        working-directory: /home/runner/work/Final-Project/Final-Project/build
+        run: |
           make verify-format
           ./verify-format
