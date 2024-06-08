@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.22.1)
 
-project(TheBanana LANGUAGES CXX)
+project(Banana LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 
@@ -8,7 +8,7 @@ find_package(SDL2 REQUIRED)
 include_directories(${SDL2_INCLUDE_DIRS})
 
 # Define the target (executable)
-add_executable(TheBanana # Use the project name for consistency
+add_executable(Banana # Use the project name for consistency
     Source_Files/main.cpp
     Source_Files/Banana.cpp
     Source_Files/memory.cpp
@@ -17,7 +17,7 @@ add_executable(TheBanana # Use the project name for consistency
 )
 
 # Link SDL2 libraries to the executable
-target_link_libraries(TheBanana ${SDL2_LIBRARIES}) 
+target_link_libraries(Banana ${SDL2_LIBRARIES}) 
 
 # Custom target for code formatting verification
 add_custom_target(verify-format
