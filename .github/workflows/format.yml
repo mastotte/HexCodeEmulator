@@ -18,6 +18,20 @@ jobs:
         run: |
           find . -name '*.cpp' -o -name '*.h' | xargs clang-format -style=google -i
 
+      - name: Create build directory
+        run: |
+          if mkdir -p /home/runner/work/Final-Project/Final-Project/build; then
+            echo "Directory created successfully!"
+          else
+            echo "Error Directory creation failed"
+            exit 1
+          fi
+      - name: Build executable 
+        working-directory: /home/runner/work/Final-Project/Final-Project/build
+        run: |
+          cmake ..
+          make
+
       - name: Verifying
         working-directory: /home/runner/work/Final-Project/Final-Project/build
         run: |
