@@ -12,6 +12,7 @@
 #include "gpu.h"
 #include "memory.h"
 
+#define CONTROLLER_INPUT_MEMORY (0x7000)
 #define SLUG_ADDRESS_HEADER 0x8000
 #define DEBUG_STDIN_ADDRESS 0x7100
 #define DEBUG_STDOUT_ADDRESS 0x7110

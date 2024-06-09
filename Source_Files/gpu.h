@@ -15,6 +15,7 @@
 #define CONTROLLER_DOWN_MASK ((uint8_t)0x04)
 #define CONTROLLER_LEFT_MASK ((uint8_t)0x02)
 #define CONTROLLER_RIGHT_MASK ((uint8_t)0x01)
+#define CONTROLLER_INPUT_MEMORY (0x7000)
 
 class GPU {
  private:
@@ -26,6 +27,7 @@ class GPU {
   int* pixels = new int[64 * 64];
   const int SCREEN_WIDTH = 64;
   const int SCREEN_HEIGHT = 64;
+  SDL_Texture *tex;
   int box_X = 0;
   int box_Y = 0;
   int box_Size = 10;
@@ -50,8 +52,9 @@ class GPU {
 
   void resizeBox(bool larger);
 
-  void setPixel(const int x, const int y,
-                const int color);  // value will be 1 or 0
+  // void setPixel(const int x, const int y,
+  //               const int color);  // value will be 1 or 0
+  // void setPixel(SDL_Texture *texture, int x, int y, Uint32 color);
 
   void decodeAndDisplay();
 

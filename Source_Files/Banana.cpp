@@ -37,10 +37,14 @@ void Banana::loop() {
   uint32_t loopAddress = bananaMEM.readAddress(bananaCPU.programCounter);
   while (true) {
     bananaCPU.programCounter = loopAddress;
+
+    bananaMEM.write8(CONTROLLER_INPUT_MEMORY, 0x0000);
+    bananaGPU.decodeAndDisplay();
+    bananaGPU.handleInput();
     while (bananaCPU.programCounter != 0) {
+      
       doInstruction(); 
-      bananaGPU.handleInput();
-      bananaGPU.decodeAndDisplay();
+      
     }
   }
 }
@@ -79,6 +83,7 @@ void Banana::doInstruction() {
     }
   }
 }
+
 void Banana::registerSet(int regNum, int value) {
   bananaCPU.registers[regNum] = value;
 }

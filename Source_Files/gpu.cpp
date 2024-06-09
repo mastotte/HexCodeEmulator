@@ -5,22 +5,22 @@
 #include <memory>
 
 #include "memory.h"
+#define SIZE 10
+
 const int BOX_SIZE = 64;
+
 void GPU::init() {
   GPU::clearFrameBuffer();
   window = SDL_CreateWindow("SDL Box", SDL_WINDOWPOS_CENTERED,
-                            SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH * 10,
-                            SCREEN_HEIGHT * 10, SDL_WINDOW_SHOWN);
+                            SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH * SIZE,
+                            SCREEN_HEIGHT * SIZE, SDL_WINDOW_SHOWN);
   renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
   SDL_Init(SDL_INIT_VIDEO);
-  drawBox(box_Size);
-
-  // Present the renderer
+  tex = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, SCREEN_WIDTH, SCREEN_HEIGHT);
   SDL_RenderPresent(renderer);
 };
 
 void GPU::quit() {
-  // Clean up
   SDL_DestroyRenderer(renderer);
   SDL_DestroyWindow(window);
   SDL_Quit();
@@ -32,90 +32,31 @@ int GPU::getPixelAddress(const int width, const int height) {
   return 0x6000 + pixel_offset;
 };
 
-void GPU::drawBox(const int size) {
-  // Set the color of the box based on the value of 'color'
-  SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-
-  // Define the dimensions of the box
-  SDL_Rect boxRect = {box_X, box_Y, size, size};
-
-  // Draw the box on the renderer
-  SDL_RenderFillRect(renderer, &boxRect);
-}
-
-void GPU::eraseBox(const int size) {
-  // Set the color of the box based on the value of 'color'
+void GPU::decodeAndDisplay(){
   SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-
-  // Define the dimensions of the box
-  SDL_Rect boxRect = {box_X, box_Y, size, size};
-
-  // Draw the box on the renderer
-  SDL_RenderFillRect(renderer, &boxRect);
-}
-
-void GPU::resizeBox(bool larger) {
-  eraseBox(box_Size);
-  if (larger) {
-    box_Size += 5;
-    drawBox(box_Size);
-  } else {
-    box_Size -= 5;
-    drawBox(box_Size);
+  SDL_RenderClear(renderer);
+  for (int height = 0; height < SCREEN_HEIGHT; height++){
+    for (int width = 0; width < SCREEN_WIDTH; width++){
+      int pixAdd = getPixelAddress(width, height);
+      int pixVal = memory.read8(pixAdd);
+        if (pixVal) {
+            SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+        // }
+        } else {
+            SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+        }
+        for (int i = 0; i < SIZE; i++){
+          for (int j = 0; j < SIZE;j++){
+            SDL_RenderDrawPoint(renderer, (width * SIZE) + j, (height * SIZE) + i);
+          }
+        }
+                  
+    }
   }
-}
-
-void GPU::moveBox(uint8_t const direction) {
-  eraseBox(box_Size);
-  if (direction == CONTROLLER_RIGHT_MASK) {
-    if (box_Size + box_X < SCREEN_WIDTH) {
-      box_X += 1;
-    }
-    drawBox(box_Size);
-  } else if (direction == CONTROLLER_LEFT_MASK) {
-    if (box_X > 0) {
-      box_X -= 1;
-    }
-    drawBox(box_Size);
-  } else if (direction == CONTROLLER_UP_MASK) {
-    if (box_Y > 0) {
-      box_Y -= 1;
-    }
-    drawBox(box_Size);
-  } else if (direction == CONTROLLER_DOWN_MASK) {
-    if (box_Y + box_Size < SCREEN_HEIGHT) {
-      box_Y += 1;
-    }
-    drawBox(box_Size);
-  }
-}
-
-void GPU::setPixel(const int x, const int y, const int color) {
-  if (color == 0) {
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);  // Black
-  } else {
-    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);  // White
-  }
-  SDL_RenderDrawPoint(renderer, x, y);
-
-  // Render present
   SDL_RenderPresent(renderer);
-};
-
-void GPU::decodeAndDisplay() {
-  SDL_RenderPresent(renderer);
-  for (int h = 0; h < SCREEN_HEIGHT; h++) {
-    // std::cout<<h<<std::endl;
-    for (int w = 0; w < SCREEN_WIDTH; w++) {
-      int pixel_address = getPixelAddress(w, h);
-      int value = memory.read8(pixel_address);
-      if (value != 0) setPixel(w, h, value);
-    }
-  }
-};
+}
 
 void GPU::clearFrameBuffer() {
-  // add code here
   memset(pixels, 0, SCREEN_WIDTH * SCREEN_HEIGHT * sizeof(Uint32));
 };
 
@@ -132,26 +73,20 @@ void GPU::handleInput() {
       switch (event.key.keysym.sym) {
         case SDLK_UP:
           controllerInput = CONTROLLER_UP_MASK;
-          moveBox(controllerInput);
           break;
         case SDLK_DOWN:
           controllerInput = CONTROLLER_DOWN_MASK;
-          moveBox(controllerInput);
           break;
         case SDLK_LEFT:
           controllerInput = CONTROLLER_LEFT_MASK;
-          moveBox(controllerInput);
           break;
         case SDLK_RIGHT:
           controllerInput = CONTROLLER_RIGHT_MASK;
-          moveBox(controllerInput);
           break;
         case SDLK_a:
-          resizeBox(true);
           controllerInput = CONTROLLER_A_MASK;
           break;
         case SDLK_b:
-          resizeBox(false);
           controllerInput = CONTROLLER_B_MASK;
           break;
         case SDLK_RETURN:
