@@ -35,15 +35,20 @@ jobs:
       - name: Run hello_world1
         working-directory: /home/runner/work/Final-Project/Final-Project/tests
         run: |
-          ./run_test.sh ./hello_world1 ../build/Banana hws/hello_world1.slug
+          ./run_test.sh ./hello_world1 ../build/Banana ../hws/hello_world1.slug
+          echo "Return code: $?"
+          if [ $? -ne 0 ]; then
+            echo "Test hello_world1 failed"
+            exit 1
+          fi
 
       - name: Run hello_world2
         working-directory: /home/runner/work/Final-Project/Final-Project/tests
         run: |
-          ./run_test.sh ./hello_world2 ../build/Banana hws/hello_world2.slug
+          ./run_test.sh ./hello_world2 ../build/Banana ../hws/hello_world2.slug
 
 
       - name: Run hello_world3
         working-directory: /home/runner/work/Final-Project/Final-Project/tests
         run: |
-          ./run_test.sh ./hello_world3 ../build/Banana hws/hello_world3.slug
+          ./run_test.sh ./hello_world3 ../build/Banana ../hws/hello_world3.slug
