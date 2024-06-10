@@ -13,9 +13,6 @@
 #define STOP_ADDRESS ((volatile uint8_t*)(0x7200))
 #define STOP *(STOP_ADDRESS) = 0
 
-// The CPU should only be in charge of running the instruction at the current
-// program counter and incrementing the program counter when necessary.
-// Instruction Functions
 //--------------------- 2.1.1-2.14 (Milan) ---------------------
 void CPU::branchOnEqual(const int reg_a, const int reg_b, const int immediate) {
   if (registers[reg_a] == registers[reg_b]) {
@@ -100,23 +97,17 @@ void CPU::jumpRegister(const int reg_a, const int reg_b, const int reg_c,
   programCounter = registers[reg_a];
 }
 //--------------------- 2.2.8-2.2.10 (Omid) ---------------------
-void CPU::shiftLeftLogical(const int reg_a, const int reg_b, const int reg_c,
+void CPU::shiftLeftLogical(const int reg_a, int reg_b, const int reg_c,
                            const int shift_value) {
-  registers[reg_c] = registers[reg_b] << shift_value;
+  registers[reg_c] = (uint16_t)registers[reg_b] << shift_value;
 }
 
-void CPU::shiftRightLogical(const int reg_a, const int reg_b, const int reg_c,
+void CPU::shiftRightLogical(const int reg_a, int reg_b, const int reg_c,
                             const int shift_value) {
-  registers[reg_c] = registers[reg_b] >> shift_value;
+  registers[reg_c] = (uint16_t)registers[reg_b] >> shift_value;
 }
 
 void CPU::setLessThan(const int reg_a, const int reg_b, const int reg_c,
                       const int shift_value) {
   registers[reg_c] = (registers[reg_a] < registers[reg_b]);
 }
-
-// seperate things out of CPU class (inheritance)
-// memory class
-// OS class contains cpu object and memory object
-// everything runs through the OS (using the CPU and memory objects)
-// cpu class references memory

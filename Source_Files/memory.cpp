@@ -18,10 +18,10 @@ void MEMORY::fileReader(const std::string& filename) {
     file.close();
     return;
   }
-
   if (!file.read(&memory[SLUG_ADDRESS_HEADER], size)) {
     std::cerr << "Error reading file: " << filename << std::endl;
   }
+
   file.close();
 }
 
@@ -39,7 +39,7 @@ uint8_t MEMORY::read8(uint32_t address) {
   if (address == DEBUG_STDIN_ADDRESS) {
     char c;
     std::cin >> c;
-    memory[address] = static_cast<uint8_t>(c);
+    memory[address] = c;
     return memory[address];
   } else {
     return static_cast<uint8_t>(memory[address]);

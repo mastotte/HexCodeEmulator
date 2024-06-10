@@ -24,6 +24,8 @@
 #define LOAD_DATA_ADDR_ROM 0x81e8
 #define ADDR_TO_LOOP 0x81e4
 #define ADDR_TO_SETUP 0x81e0
+#define SETUP_ADD 0x2078
+#define LOOP_ADD 0x2079
 
 class Banana {
  private:

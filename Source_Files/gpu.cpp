@@ -15,8 +15,7 @@ void GPU::init() {
                             SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH * SIZE,
                             SCREEN_HEIGHT * SIZE, SDL_WINDOW_SHOWN);
   renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-  SDL_Init(SDL_INIT_VIDEO);
-  tex = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, SCREEN_WIDTH, SCREEN_HEIGHT);
+
   SDL_RenderPresent(renderer);
 };
 
@@ -62,14 +61,12 @@ void GPU::clearFrameBuffer() {
 
 void GPU::handleInput() {
   SDL_Event event;
-  int16_t controllerInput = 0;
-
+  uint16_t controllerInput = 0;
   while (SDL_PollEvent(&event)) {
     if (event.type == SDL_QUIT) {
       exit(EXIT_SUCCESS);
     }
     if (event.type == SDL_KEYDOWN || event.type == SDL_KEYUP) {
-      controllerInput = 0;
       switch (event.key.keysym.sym) {
         case SDLK_UP:
           controllerInput = CONTROLLER_UP_MASK;

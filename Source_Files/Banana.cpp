@@ -21,7 +21,7 @@ void Banana::dataLoad() {
 void Banana::setup() {
   bananaGPU.init();
   bananaCPU.programCounter = PC_RESET;
-  bananaCPU.jumpAndLink(0, 0, 0x2078);
+  bananaCPU.jumpAndLink(0, 0, SETUP_ADD);
   bananaCPU.programCounter = bananaMEM.readAddress(bananaCPU.programCounter);
   while (bananaCPU.programCounter > SLUG_ADDRESS_HEADER) {
     doInstruction();
@@ -33,7 +33,7 @@ void Banana::setup() {
 
 void Banana::loop() {
   bananaCPU.programCounter = PC_RESET;
-  bananaCPU.jumpAndLink(0, 0, 0x2079);
+  bananaCPU.jumpAndLink(0, 0, LOOP_ADD);
   uint32_t loopAddress = bananaMEM.readAddress(bananaCPU.programCounter);
   while (true) {
     bananaCPU.programCounter = loopAddress;

@@ -7,7 +7,7 @@
 #include "memory.h"
 
 #define CONTROLLER_INPUT_MEMORY (0x7000)
-#define CONTROLLER_A_MASK ((uint8_t)0x80)
+#define CONTROLLER_A_MASK ((uint16_t)0x80)
 #define CONTROLLER_B_MASK ((uint8_t)0x40)
 #define CONTROLLER_SELECT_MASK ((uint8_t)0x20)
 #define CONTROLLER_START_MASK ((uint8_t)0x10)
@@ -15,7 +15,6 @@
 #define CONTROLLER_DOWN_MASK ((uint8_t)0x04)
 #define CONTROLLER_LEFT_MASK ((uint8_t)0x02)
 #define CONTROLLER_RIGHT_MASK ((uint8_t)0x01)
-#define CONTROLLER_INPUT_MEMORY (0x7000)
 
 class GPU {
  private:
@@ -51,10 +50,6 @@ class GPU {
   void moveBox(uint8_t const direction);
 
   void resizeBox(bool larger);
-
-  // void setPixel(const int x, const int y,
-  //               const int color);  // value will be 1 or 0
-  // void setPixel(SDL_Texture *texture, int x, int y, Uint32 color);
 
   void decodeAndDisplay();
 
