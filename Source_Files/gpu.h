@@ -26,7 +26,7 @@ class GPU {
   int* pixels = new int[64 * 64];
   const int SCREEN_WIDTH = 64;
   const int SCREEN_HEIGHT = 64;
-  SDL_Texture *tex;
+  SDL_Texture* tex;
   int box_X = 0;
   int box_Y = 0;
   int box_Size = 10;

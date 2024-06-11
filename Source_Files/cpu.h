@@ -17,12 +17,11 @@ class CPU {
  public:
   uint16_t programCounter;
   int16_t registers[32];
-  
-  CPU(MEMORY& memory) : memory(memory) {
 
-    for(int i = 0; i < 32; i++){
-    registers[i] = 0;
-  }
+  CPU(MEMORY& memory) : memory(memory) {
+    for (int i = 0; i < 32; i++) {
+      registers[i] = 0;
+    }
     ROptable = {{subtractCode, &CPU::subtract},
                 {or_OpCode, &CPU::or_Op},
                 {norCode, &CPU::nor},

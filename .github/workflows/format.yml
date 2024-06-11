@@ -15,9 +15,22 @@ jobs:
           sudo apt install -y clang-format
           sudo apt install -y cmake libsdl2-dev
           clang-format --version
-      - name: Run clang-format
+
+      
+      # - name: Run clang-format
+      #   run: |
+      #     find . -name '*.cpp' -o -name '*.h' | xargs clang-format -style=google -i
+
+      - name: Check clang-format
         run: |
-          find . -name '*.cpp' -o -name '*.h' | xargs clang-format -style=google -i
+          find . -name '*.cpp' -o -name '*.h' | xargs clang-format -style=google -output-replacements-xml | grep "<replacement " > format_diff.xml
+          if [ -s format_diff.xml ]; then
+            echo "Code is not formatted correctly. Please run clang-format on your source files."
+            cat format_diff.xml
+            exit 1
+          else
+            echo "All source files are formatted correctly."
+          fi
 
       - name: Create build directory
         run: |

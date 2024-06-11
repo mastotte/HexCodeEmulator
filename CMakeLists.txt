@@ -17,14 +17,35 @@ add_executable(Banana # Use the project name for consistency
 )
 
 # Link SDL2 libraries to the executable
-target_link_libraries(Banana ${SDL2_LIBRARIES}) 
+target_link_libraries(Banana ${SDL2_LIBRARIES})
 
-# Custom target for code formatting verification
-add_custom_target(verify-format
-    COMMAND clang-format -style=Google
-    ${CMAKE_CURRENT_SOURCE_DIR}/Source_Files/*.cpp
+set(SOURCE_FILES
+    ${CMAKE_CURRENT_SOURCE_DIR}/Source_Files/main.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Source_Files/Banana.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Source_Files/memory.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Source_Files/cpu.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Source_Files/gpu.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Source_Files/*.h
-    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-    COMMENT "Checking code formatting against Google style..."
 )
 
+find_program(CLANG_FORMAT "clang-format")
+if(NOT CLANG_FORMAT)
+    message(FATAL_ERROR "clang-format not found. Please install it.")
+endif()
+
+add_custom_target(format
+    COMMAND ${CLANG_FORMAT} -style=Google -i ${SOURCE_FILES}
+    COMMENT "Formatting source files..."
+)
+
+add_custom_target(verify-format
+    COMMAND ${CLANG_FORMAT} -style=Google --dry-run --Werror ${SOURCE_FILES}
+    COMMENT "Verifying code formatting against Google style..."
+)
+
+add_custom_target(check-format
+    DEPENDS format verify-format
+    COMMENT "Formatting and verifying source files..."
+)
+
+add_dependencies(Banana check-format)

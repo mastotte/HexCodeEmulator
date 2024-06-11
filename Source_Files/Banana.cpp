@@ -38,14 +38,12 @@ void Banana::loop() {
   while (true) {
     bananaCPU.programCounter = loopAddress;
 
+    while (bananaCPU.programCounter != 0) {
+      doInstruction();
+    }
     bananaMEM.write8(CONTROLLER_INPUT_MEMORY, 0x0000);
     bananaGPU.decodeAndDisplay();
     bananaGPU.handleInput();
-    while (bananaCPU.programCounter != 0) {
-      
-      doInstruction(); 
-      
-    }
   }
 }
 
@@ -90,7 +88,7 @@ void Banana::registerSet(int regNum, int value) {
 
 void Banana::startup(char* filename) {
   openFile(filename);
-  
+
   dataLoad();
 
   registerSet(29, 0x6000);

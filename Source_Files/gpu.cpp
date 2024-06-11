@@ -31,25 +31,25 @@ int GPU::getPixelAddress(const int width, const int height) {
   return 0x6000 + pixel_offset;
 };
 
-void GPU::decodeAndDisplay(){
+void GPU::decodeAndDisplay() {
   SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
   SDL_RenderClear(renderer);
-  for (int height = 0; height < SCREEN_HEIGHT; height++){
-    for (int width = 0; width < SCREEN_WIDTH; width++){
+  for (int height = 0; height < SCREEN_HEIGHT; height++) {
+    for (int width = 0; width < SCREEN_WIDTH; width++) {
       int pixAdd = getPixelAddress(width, height);
       int pixVal = memory.read8(pixAdd);
-        if (pixVal) {
-            SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+      if (pixVal) {
+        SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
         // }
-        } else {
-            SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+      } else {
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+      }
+      for (int i = 0; i < SIZE; i++) {
+        for (int j = 0; j < SIZE; j++) {
+          SDL_RenderDrawPoint(renderer, (width * SIZE) + j,
+                              (height * SIZE) + i);
         }
-        for (int i = 0; i < SIZE; i++){
-          for (int j = 0; j < SIZE;j++){
-            SDL_RenderDrawPoint(renderer, (width * SIZE) + j, (height * SIZE) + i);
-          }
-        }
-                  
+      }
     }
   }
   SDL_RenderPresent(renderer);
