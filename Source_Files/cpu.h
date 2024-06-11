@@ -16,7 +16,7 @@ class CPU {
 
  public:
   uint16_t programCounter;
-  int32_t registers[32];
+  int16_t registers[32];
   
   CPU(MEMORY& memory) : memory(memory) {
 

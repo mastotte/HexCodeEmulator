@@ -7,7 +7,7 @@
 #include "memory.h"
 
 #define CONTROLLER_INPUT_MEMORY (0x7000)
-#define CONTROLLER_A_MASK ((uint16_t)0x80)
+#define CONTROLLER_A_MASK ((uint8_t)0x80)
 #define CONTROLLER_B_MASK ((uint8_t)0x40)
 #define CONTROLLER_SELECT_MASK ((uint8_t)0x20)
 #define CONTROLLER_START_MASK ((uint8_t)0x10)

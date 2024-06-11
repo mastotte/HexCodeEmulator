@@ -61,7 +61,7 @@ void GPU::clearFrameBuffer() {
 
 void GPU::handleInput() {
   SDL_Event event;
-  uint16_t controllerInput = 0;
+  uint8_t controllerInput = 0;
   while (SDL_PollEvent(&event)) {
     if (event.type == SDL_QUIT) {
       exit(EXIT_SUCCESS);

@@ -100,12 +100,12 @@ void CPU::jumpRegister(const int reg_a, const int reg_b, const int reg_c,
 //--------------------- 2.2.8-2.2.10 (Omid) ---------------------
 void CPU::shiftLeftLogical(const int reg_a, int reg_b, const int reg_c,
                            const int shift_value) {
-  registers[reg_c] = (uint16_t)registers[reg_b] << shift_value;
+  registers[reg_c] = (unsigned)registers[reg_b] << shift_value;
 }
 
 void CPU::shiftRightLogical(const int reg_a, int reg_b, const int reg_c,
                             const int shift_value) {
-  registers[reg_c] = (uint16_t)registers[reg_b] >> shift_value;
+  registers[reg_c] = (unsigned)registers[reg_b] >> shift_value;
 }
 
 void CPU::setLessThan(const int reg_a, const int reg_b, const int reg_c,
