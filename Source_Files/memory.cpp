@@ -39,7 +39,7 @@ uint8_t MEMORY::read8(uint32_t address) {
   if (address == DEBUG_STDIN_ADDRESS) {
     char c;
     std::cin >> c;
-    memory[address] = c;
+    memory[address] = static_cast<uint8_t>(c);
     return memory[address];
   } else {
     return static_cast<uint8_t>(memory[address]);
