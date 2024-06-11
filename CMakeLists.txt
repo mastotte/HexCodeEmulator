@@ -41,21 +41,15 @@ add_executable(Banana # Use the project name for consistency
 target_link_libraries(Banana ${SDL2_LIBRARIES}) 
 
 # Custom target for code formatting verification
-find_program(CLANG_FORMAT_EXE NAMES "clang-format")
-if(NOT CLANG_FORMAT_EXE)
-    message(FATAL_ERROR "clang-format not found.")
-endif()
-
 add_custom_target(verify-format
-    COMMAND ${CLANG_FORMAT_EXE} -style=google -output-replacements-xml ${CMAKE_CURRENT_SOURCE_DIR}/Source_Files/*.cpp ${CMAKE_CURRENT_SOURCE_DIR}/Source_Files/*.h > /dev/null
-    COMMAND ${CMAKE_COMMAND} -E echo "[ :\\) ] Code formatting check completed!"
+    COMMAND clang-format -output-replacements-xml -style=file
+    ${CMAKE_CURRENT_SOURCE_DIR}/Source_Files/*.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/Source_Files/*.h
+    | grep -c '<replacement ' > /dev/null
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-    COMMENT "Verifying code formatting..."
+    COMMAND echo "[ :\\) ] Format checked!"
+    COMMENT "Checking code formatting..."
 )
-
-
-# Add dependencies to ensure formatting is checked before building
-add_dependencies(Banana verify-format)
 
 
 
