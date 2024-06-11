@@ -31,4 +31,4 @@ jobs:
         working-directory: /home/runner/work/Final-Project/Final-Project/build
         run: |
           cmake ..
-          make verify_format
+          make verify-format
