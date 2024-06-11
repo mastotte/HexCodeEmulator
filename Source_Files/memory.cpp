@@ -2,6 +2,8 @@
 
 MEMORY::MEMORY() : memory(0x16000, 0) {}
 
+//addresses should be 16 bit ints
+
 void MEMORY::fileReader(const std::string& filename) {
   std::ifstream file(filename, std::ios::binary | std::ios::ate);
 
@@ -50,7 +52,10 @@ uint16_t MEMORY::read16(uint32_t address) {
   return (memory[address] << 8) | memory[address + 1];
 }
 
-void MEMORY::write8(uint32_t address, uint8_t data) {
+void MEMORY::write8(uint32_t address, uint8_t data) { //issue: address is way too large
+  //if(address > 65536){
+    //std::cout << address << std::endl;
+  //}
   memory[address] = data;
   if (address == DEBUG_STDOUT_ADDRESS) {
     std::cout << data;
