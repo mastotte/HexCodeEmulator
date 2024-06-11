@@ -6,11 +6,11 @@ void Banana::openFile(const std::string& name) {
 }
 
 void Banana::dataLoad() {
-  uint32_t dataSize = bananaMEM.readAddress(DATA_SIZE);
-  uint32_t ramAddress = bananaMEM.readAddress(PROGRAM_DATA_ADDR_RAM);
-  uint32_t dataAddress = bananaMEM.readAddress(LOAD_DATA_ADDR_ROM);
+  uint16_t dataSize = bananaMEM.readAddress(DATA_SIZE);
+  uint16_t ramAddress = bananaMEM.readAddress(PROGRAM_DATA_ADDR_RAM);
+  uint16_t dataAddress = bananaMEM.readAddress(LOAD_DATA_ADDR_ROM);
 
-  for (uint32_t i = 0; i < dataSize; i++) {
+  for (uint16_t i = 0; i < dataSize; i++) {
     uint8_t data = bananaMEM.read8(dataAddress);
     bananaMEM.write8(ramAddress, data);
     ramAddress++;

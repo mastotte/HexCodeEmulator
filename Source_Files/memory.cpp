@@ -37,7 +37,7 @@ uint32_t MEMORY::readAddress(const size_t& addr) const {
   return out;
 }
 
-uint8_t MEMORY::read8(uint32_t address) {
+uint8_t MEMORY::read8(uint16_t address) {
   if (address == DEBUG_STDIN_ADDRESS) {
     char c;
     std::cin >> c;
@@ -48,14 +48,11 @@ uint8_t MEMORY::read8(uint32_t address) {
   }
 }
 
-uint16_t MEMORY::read16(uint32_t address) {
+uint16_t MEMORY::read16(uint16_t address) {
   return (memory[address] << 8) | memory[address + 1];
 }
 
-void MEMORY::write8(uint32_t address, uint8_t data) { //issue: address is way too large
-  //if(address > 65536){
-    //std::cout << address << std::endl;
-  //}
+void MEMORY::write8(uint16_t address, uint8_t data) { 
   memory[address] = data;
   if (address == DEBUG_STDOUT_ADDRESS) {
     std::cout << data;
@@ -66,7 +63,7 @@ void MEMORY::write8(uint32_t address, uint8_t data) { //issue: address is way to
   }
 }
 
-void MEMORY::write16(uint32_t address, uint16_t data) {
+void MEMORY::write16(uint16_t address, uint16_t data) {
   memory[address] = data >> 8;
   memory[address + 1] = data;
   if (address == DEBUG_STDOUT_ADDRESS) {

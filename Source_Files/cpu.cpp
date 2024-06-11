@@ -39,7 +39,6 @@ void CPU::storeWord(const int reg_a, const int reg_b, const int immediate) {
   memory.write16(registers[reg_a] + immediate, registers[reg_b]);
 }
 
-//something going wrong here - possibly registers
 void CPU::storeByte(const int reg_a, const int reg_b, const int immediate) {
   memory.write8(registers[reg_a] + immediate, registers[reg_b]);
 }
