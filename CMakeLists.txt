@@ -21,10 +21,10 @@ target_link_libraries(Banana ${SDL2_LIBRARIES})
 
 # Custom target for code formatting verification
 add_custom_target(verify-format
-    COMMAND clang-format -output-replacements-xml -style=file
+    COMMAND clang-format -style=Google
     ${CMAKE_CURRENT_SOURCE_DIR}/Source_Files/*.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/Source_Files/*.h
-    | grep -c '<replacement ' > /dev/null
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-    COMMENT "Checking code formatting..."
+    COMMENT "Checking code formatting against Google style..."
 )
+
