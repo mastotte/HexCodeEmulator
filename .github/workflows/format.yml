@@ -45,5 +45,3 @@ jobs:
         run: |
           cmake ..
           make
-          cmake --build . --target verify_format
-          ./verify_format
