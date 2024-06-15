@@ -45,21 +45,20 @@ void Banana::loop() {
     bananaGPU.decodeAndDisplay();
     bananaGPU.handleInput();
   }
+  bananaGPU.quit();
 }
 
 void Banana::doInstruction() {
   uint32_t instruction = bananaMEM.readAddress(bananaCPU.programCounter);
   bananaCPU.programCounter += 4;
   uint32_t opcode = instruction >> 26;
-  // check if the opcode is a value function
+
   if (bananaCPU.IOptable.find(opcode) != bananaCPU.IOptable.end()) {
     uint32_t reg_a = instruction << 6;
     reg_a = reg_a >> 27;
     uint32_t reg_b = instruction << 11;
     reg_b = reg_b >> 27;
     if (opcode == bananaCPU.R_TYPE) {
-      // check if function code is valid
-
       uint32_t function = instruction << 26;
 
       function = function >> 26;

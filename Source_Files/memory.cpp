@@ -1,6 +1,6 @@
 #include "memory.h"
 
-MEMORY::MEMORY() : memory(0x16000, 0) {}
+MEMORY::MEMORY() : memory(0x10000, 0) {}
 
 // addresses should be 16 bit ints
 
