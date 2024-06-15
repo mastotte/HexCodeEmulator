@@ -49,7 +49,7 @@ class Banana {
 
   void registerSet(int regNum, int value);
 
-  void startup(char* filename);
+  void startup(std::string filename);
 
   std::unordered_map<int, uint8_t> CharacterMaskMap = {
       {7, CONTROLLER_A_MASK},      {6, CONTROLLER_B_MASK},

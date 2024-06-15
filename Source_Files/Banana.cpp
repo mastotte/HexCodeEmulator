@@ -85,7 +85,7 @@ void Banana::registerSet(int regNum, int value) {
   bananaCPU.registers[regNum] = value;
 }
 
-void Banana::startup(char* filename) {
+void Banana::startup(std::string filename) {
   openFile(filename);
 
   dataLoad();
